@@ -1,0 +1,13 @@
+{
+    "files.autoSave": "afterDelay",
+    "files.eol": "\n",
+    "workbench.tree.indent": 16,
+    "editor.tabSize": 4,
+    "typescript.inlayHints.parameterNames.enabled": "literals",
+    "editor.inlayHints.fontSize": 10,
+    "workbench.colorCustomizations": {
+        "editorInlayHint.background": "#4d4d4d99",
+        "editorInlayHint.foreground": "#ffffffcc"
+    },
+    "eslint.format.enable": true
+}
