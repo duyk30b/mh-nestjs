@@ -1,0 +1,37 @@
+version: '3.3'
+
+services:
+  nestjs:
+    container_name: mhc_nestjs
+    image: mhi_nestjs:1.0.0
+    restart: always
+    depends_on:
+      - mysql
+    build:
+      dockerfile: Dockerfile
+      context: "./"
+    volumes:
+      - ./dist:/app/dist
+    ports:
+      - "7300:3000"
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=mh_database
+      - MYSQL_USER=medihome
+      - MYSQL_PASSWORD=mh123456
+
+  mysql:
+    container_name: mhc_mysql
+    image: mysql:8.0.31
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=medihome2022
+      - MYSQL_DATABASE=mh_database
+      - MYSQL_USER=medihome
+      - MYSQL_PASSWORD=mh123456
+    ports:
+      - "7306:3306"

@@ -1,3 +1,8 @@
+# Install Enviroment
+```
+docker compose up -d
+```
+
 # Install
 ```
 nvm use 16.18.1

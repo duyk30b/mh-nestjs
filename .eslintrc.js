@@ -24,7 +24,7 @@ module.exports = {
 		'no-unused-vars': 0,                                     // khai báo biến mà không sử dụng
 		'no-multiple-empty-lines': [1, { max: 1, maxEOF: 1 }],   // Số dòng trống tối đa
 		'max-len': [1, { code: 120 }],
-		'indent': [1, 'tab'],                                    // thụt lề bằng tab
+		'indent': [1, 'tab', { ignoredNodes: ['PropertyDefinition'] }],
 		'semi': [1, 'never'],                                    // dấu ; cuối dòng
 		'quotes': [1, 'single', { allowTemplateLiterals: true }],
 		'quote-props': [1, 'consistent-as-needed'],              // dấu quote ở key của object -> dùng 1 cách nhất quán
