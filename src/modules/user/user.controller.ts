@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { LoggingInterceptor } from 'src/common/logging.interceptor'
+import { LoggingInterceptor } from '../../common/logging.interceptor'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UserService } from './user.service'

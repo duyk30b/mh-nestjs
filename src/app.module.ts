@@ -1,29 +1,19 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 import { DataSource } from 'typeorm'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
+import Env from './config'
 import { LoggerMiddleware } from './common/logger.middleware'
-import { UserModule } from './user/user.module'
-import { ConfigModule } from '@nestjs/config'
+import { CustomerModule } from './modules/customer/customer.module'
+import { ProviderModule } from './modules/provider/provider.module'
+import { UserModule } from './modules/user/user.module'
 
 @Module({
 	imports: [
-		TypeOrmModule.forRoot({
-			type: 'mysql',
-			host: 'localhost',
-			port: 7306,
-			username: 'medihome',
-			password: 'mh123456',
-			database: 'mh_database',
-			entities: [],
-			// synchronize: true,
-		}),
-		ConfigModule.forRoot(),
+		TypeOrmModule.forRoot(Env.mysql as TypeOrmModuleOptions),
 		UserModule,
+		ProviderModule,
+		CustomerModule,
 	],
-	controllers: [AppController],
-	providers: [AppService],
 })
 export class AppModule implements NestModule {
 	constructor(private dataSource: DataSource) { }
