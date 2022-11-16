@@ -5,7 +5,7 @@ import { DataSource, DataSourceOptions } from 'typeorm'
 dotenv.config({ path: path.resolve(__dirname, '../', `.env.${process.env.NODE_ENV}`) })
 
 const Env = {
-	port: Number(process.env.PORT) || 3000,
+	server: { port: Number(process.env.PORT) || 3000 },
 
 	mysql: {
 		type: 'mysql',

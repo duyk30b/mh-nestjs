@@ -3,9 +3,7 @@ import { ProviderService } from './provider.service'
 import { CreateProviderDto } from './dto/create-provider.dto'
 import { UpdateProviderDto } from './dto/update-provider.dto'
 import { ApiTags } from '@nestjs/swagger'
-import { LoggingInterceptor } from '../../common/logging.interceptor'
 
-@UseInterceptors(LoggingInterceptor)
 @ApiTags('provider')
 @Controller('provider')
 export class ProviderController {

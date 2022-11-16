@@ -1,11 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { LoggingInterceptor } from '../../common/logging.interceptor'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UserService } from './user.service'
 
-@UseInterceptors(LoggingInterceptor)
 @ApiTags('user')
 @Controller('user')
 export class UserController {
@@ -17,7 +15,13 @@ export class UserController {
 	}
 
 	@Get()
-	findAll() {
+	async findAll() {
+		const a = new Promise((res, rej) => {
+			setTimeout(() => {
+				res(1123)
+			}, 10000)
+		})
+		await a
 		return this.userService.findAll()
 	}
 
