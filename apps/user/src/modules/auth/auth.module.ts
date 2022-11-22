@@ -7,6 +7,7 @@ import ClinicEntity from '../../typeorm/entities/clinic.entity'
 import EmployeeEntity from '../../typeorm/entities/employee.entity'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
+import { JwtExtendService } from './jwt-extend.service'
 
 @Module({
 	imports: [
@@ -15,6 +16,7 @@ import { AuthService } from './auth.service'
 		JwtModule,
 	],
 	controllers: [AuthController],
-	providers: [AuthService],
+	providers: [AuthService, JwtExtendService],
+	exports: [JwtExtendService],
 })
 export class AuthModule { }

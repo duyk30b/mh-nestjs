@@ -1,8 +1,8 @@
 import { Column, Entity } from 'typeorm'
-import { BaseEntities } from '../common/base.entities'
+import { BaseEntity } from '../common/base.entity'
 
 @Entity('provider')
-export default class ProviderEntity extends BaseEntities {
+export default class ProviderEntity extends BaseEntity {
 	@Column({ name: 'organize_id' })
 	organizeId: number
 

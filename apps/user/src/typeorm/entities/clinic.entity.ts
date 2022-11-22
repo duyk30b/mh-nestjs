@@ -1,8 +1,8 @@
 import { Column, Entity } from 'typeorm'
-import { BaseEntities } from '../common/base.entities'
+import { BaseEntity } from '../common/base.entity'
 
 @Entity('clinic')
-export default class ClinicEntity extends BaseEntities {
+export default class ClinicEntity extends BaseEntity {
 	@Column({ type: 'tinyint', default: 1 })
 	level: number
 

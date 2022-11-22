@@ -5,7 +5,7 @@ import { EValidateError } from './exception.enum'
 export class ValidationException extends Error {
 	private readonly errors: ValidationError[]
 	constructor(validationErrors: ValidationError[] = []) {
-		super(EValidateError.FAILD)
+		super(EValidateError.Faild)
 		this.errors = validationErrors
 	}
 	getMessage() {

@@ -1,7 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
 import { ClinicService } from './clinic.service'
 import { CreateClinicDto, UpdateClinicDto } from './clinic.dto'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Clinic')
+@ApiBearerAuth('access-token')
 @Controller('clinic')
 export class ClinicController {
 	constructor(private readonly clinicService: ClinicService) { }

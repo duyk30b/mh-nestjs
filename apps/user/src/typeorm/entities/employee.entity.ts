@@ -1,20 +1,16 @@
 import { Column, Entity } from 'typeorm'
-import { BaseEntities } from '../common/base.entities'
+import { EUserRole } from '../../common/constants'
+import { BaseEntity } from '../common/base.entity'
 
-export enum UserRole {
-	OWNER = 'OWNER',
-	USER = 'USER',
-}
-
-@Entity('user')
-export default class EmployeeEntity extends BaseEntities {
+@Entity('employee')
+export default class EmployeeEntity extends BaseEntity {
 	@Column({ name: 'clinic_id' })
 	clinicId: number
 
-	@Column({ unique: true })
+	@Column({ unique: true, nullable: true })
 	email: string
 
-	@Column({ unique: true })
+	@Column({ unique: true, nullable: true })
 	phone: string
 
 	@Column()
@@ -26,6 +22,6 @@ export default class EmployeeEntity extends BaseEntities {
 	@Column({ nullable: true })
 	address: string
 
-	@Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
-	role: UserRole
+	@Column({ type: 'enum', enum: EUserRole, default: EUserRole.User })
+	role: EUserRole
 }

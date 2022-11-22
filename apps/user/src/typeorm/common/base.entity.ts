@@ -3,7 +3,7 @@ import {
 	CreateDateColumn, UpdateDateColumn, DeleteDateColumn, VersionColumn,
 } from 'typeorm'
 
-export class BaseEntities {
+export class BaseEntity {
 	@PrimaryGeneratedColumn({ name: 'id' })
 	id: number
 

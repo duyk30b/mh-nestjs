@@ -1,31 +1,25 @@
 import { ELoginError, ERegisterError, randomString } from '@libs/utils'
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common'
-import { ConfigType } from '@nestjs/config'
-import { JwtService } from '@nestjs/jwt'
-import { JwtConfig } from 'apps/user/src/enviroments'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { DataSource } from 'typeorm'
+import { EUserRole } from '../../common/constants'
 import ClinicEntity from '../../typeorm/entities/clinic.entity'
-import EmployeeEntity, { UserRole } from '../../typeorm/entities/employee.entity'
-import { LoginDto } from './auth.dto'
+import EmployeeEntity from '../../typeorm/entities/employee.entity'
+import { LoginDto, RegisterDto } from './auth.dto'
 
 @Injectable()
 export class AuthService {
-	constructor(
-		@Inject(JwtConfig.KEY) private jwtConfig: ConfigType<typeof JwtConfig>,
-		private readonly jwtService: JwtService,
-		private dataSource: DataSource
-	) { }
+	constructor(private dataSource: DataSource) { }
 
-	async register(createClinicDto: { email: string; phone: string; password: string }): Promise<EmployeeEntity> {
-		const { email, phone, password } = createClinicDto
+	async register(registerDto: RegisterDto): Promise<EmployeeEntity> {
+		const { email, phone, password } = registerDto
 		const hashPassword = await bcrypt.hash(password, 5)
 
 		const { employee } = await this.dataSource.transaction(async (manager) => {
 			const findEmployee = await manager.findOne(EmployeeEntity, {
 				where: [
-					{ email, role: UserRole.OWNER },
-					{ phone, role: UserRole.OWNER },
+					{ email, role: EUserRole.Owner },
+					{ phone, role: EUserRole.Owner },
 				],
 			})
 			if (findEmployee) {
@@ -52,7 +46,7 @@ export class AuthService {
 				phone,
 				username: 'Admin',
 				password: hashPassword,
-				role: UserRole.OWNER,
+				role: EUserRole.Owner,
 			})
 			const newEmployee = await manager.save(createEmployee)
 			return { clinic: newClinic, employee: newEmployee }
@@ -77,19 +71,5 @@ export class AuthService {
 		}
 
 		return employee
-	}
-
-	createAccessToken(payload: object) {
-		return this.jwtService.sign(payload, {
-			privateKey: this.jwtConfig.accessKey,
-			expiresIn: this.jwtConfig.accessTime,
-		})
-	}
-
-	createRefreshToken(payload: object) {
-		return this.jwtService.sign(payload, {
-			privateKey: this.jwtConfig.refreshKey,
-			expiresIn: this.jwtConfig.refreshTime,
-		})
 	}
 }

@@ -1,12 +1,13 @@
 import { HttpExceptionFilter, UnknowExceptionFilter, ValidationException, ValidationExceptionFilter } from '@libs/utils'
 import { ValidationError, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { NestFactory } from '@nestjs/core'
+import { NestFactory, Reflector } from '@nestjs/core'
 import rateLimit from 'express-rate-limit'
 import helmet from 'helmet'
 import * as requestIp from 'request-ip'
 import { AppModule } from './app.module'
 import { setupSwagger } from './common/swagger'
+import { UserRolesGuard } from './guards/user-roles.guard'
 import { AccessLogInterceptor } from './interceptor/access-log.interceptor'
 import { TimeoutInterceptor } from './interceptor/timeout.interceptor'
 
@@ -34,6 +35,8 @@ async function bootstrap() {
 		new HttpExceptionFilter(),
 		new ValidationExceptionFilter()
 	)
+
+	app.useGlobalGuards(new UserRolesGuard(app.get(Reflector)))
 
 	app.useGlobalPipes(new ValidationPipe({
 		validationError: { target: false, value: true },

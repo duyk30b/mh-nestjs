@@ -1,37 +1,32 @@
 import { Body, Controller, Param, Post, Req } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { getClientIp } from 'request-ip'
-import { AuthService } from './auth.service'
 import { LoginDto, RegisterDto } from './auth.dto'
+import { AuthService } from './auth.service'
+import { JwtExtendService } from './jwt-extend.service'
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-	constructor(private readonly authService: AuthService) { }
+	constructor(
+		private readonly authService: AuthService,
+		private readonly jwtExtendService: JwtExtendService
+	) { }
 
 	@Post('register')
+	@ApiBearerAuth('access-token')
 	async register(@Body() registerDto: RegisterDto, @Req() request: Request) {
 		const ip = getClientIp(request)
-		const employeeInfo = await this.authService.register(registerDto)
-		const employee = {
-			username: employeeInfo.username,
-			role: employeeInfo.role,
-		}
-		const accessToken = this.authService.createAccessToken(employee)
-		const refreshToken = this.authService.createRefreshToken(employee)
+		const employee = await this.authService.register(registerDto)
+		const { accessToken, refreshToken } = this.jwtExtendService.createTokenFromEmployee(employee)
 		return { employee, accessToken, refreshToken }
 	}
 
 	@Post('login')
 	async login(@Body() loginDto: LoginDto) {
-		const employeeInfo = await this.authService.login(loginDto)
-		const employee = {
-			username: employeeInfo.username,
-			role: employeeInfo.role,
-		}
-		const accessToken = this.authService.createAccessToken(employee)
-		const refreshToken = this.authService.createRefreshToken(employee)
+		const employee = await this.authService.login(loginDto)
+		const { accessToken, refreshToken } = this.jwtExtendService.createTokenFromEmployee(employee)
 		return { employee, accessToken, refreshToken }
 	}
 
