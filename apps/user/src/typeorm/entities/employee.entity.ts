@@ -1,8 +1,10 @@
-import { Column, Entity } from 'typeorm'
+import { Column, Entity, Index } from 'typeorm'
 import { EUserRole } from '../../common/constants'
 import { BaseEntity } from '../common/base.entity'
 
 @Entity('employee')
+@Index(['clinicId', 'email'])
+@Index(['clinicId', 'username'])
 export default class EmployeeEntity extends BaseEntity {
 	@Column({ name: 'clinic_id' })
 	clinicId: number

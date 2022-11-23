@@ -741,7 +741,8 @@ __decorate([
     __metadata("design:type", typeof (_a = typeof constants_1.EUserRole !== "undefined" && constants_1.EUserRole) === "function" ? _a : Object)
 ], EmployeeEntity.prototype, "role", void 0);
 EmployeeEntity = __decorate([
-    (0, typeorm_1.Entity)('employee')
+    (0, typeorm_1.Entity)('employee'),
+    (0, typeorm_1.Index)(['clinicId', 'id'], { unique: true })
 ], EmployeeEntity);
 exports["default"] = EmployeeEntity;
 
@@ -1559,12 +1560,12 @@ const common_1 = __webpack_require__(5);
 const medicine_service_1 = __webpack_require__(45);
 const medicine_controller_1 = __webpack_require__(46);
 const typeorm_1 = __webpack_require__(14);
-const medicine_entity_1 = __webpack_require__(49);
+const goods_entity_1 = __webpack_require__(49);
 let MedicineModule = class MedicineModule {
 };
 MedicineModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([medicine_entity_1.default])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([goods_entity_1.default])],
         controllers: [medicine_controller_1.MedicineController],
         providers: [medicine_service_1.MedicineService],
     })
@@ -1743,10 +1744,6 @@ const typeorm_1 = __webpack_require__(15);
 const base_entity_1 = __webpack_require__(23);
 let MedicineEntity = class MedicineEntity extends base_entity_1.BaseEntity {
 };
-__decorate([
-    (0, typeorm_1.Column)({ name: 'clinic_id' }),
-    __metadata("design:type", Number)
-], MedicineEntity.prototype, "clinicId", void 0);
 __decorate([
     (0, typeorm_1.Column)({ name: 'brand_name', nullable: true }),
     __metadata("design:type", String)

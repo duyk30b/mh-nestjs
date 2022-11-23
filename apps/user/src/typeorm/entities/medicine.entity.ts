@@ -1,17 +1,21 @@
-import { Entity, Column } from 'typeorm'
+import { Entity, Column, Index } from 'typeorm'
 import { BaseEntity } from '../common/base.entity'
 
 @Entity('medicine')
+@Index(['clinicId', 'id'], { unique: true })
 export default class MedicineEntity extends BaseEntity {
 	@Column({ name: 'clinic_id' })
 	clinicId: number
 
 	@Column({ name: 'brand_name', nullable: true })
-	public brandName: string                              // tên biệt dược
+	brandName: string                              // tên biệt dược
 
 	@Column({ name: 'chemical_name', nullable: true })
-	public chemicalName: string                           // tên gốc
+	chemicalName: string                           // tên gốc
 
 	@Column({ name: 'calculation_unit', nullable: true })
-	public calculationUnit: string                        // đơn vị tính: lọ, ống, vỉ
+	calculationUnit: string                        // đơn vị tính: lọ, ống, vỉ
+
+	@Column({ name: 'image', nullable: true })
+	image: string
 }
