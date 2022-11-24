@@ -3,7 +3,7 @@ import { CreateEmployeeDto } from './dto/create-employee.dto'
 import { UpdateEmployeeDto } from './dto/update-employee.dto'
 import * as bcrypt from 'bcrypt'
 import { DataSource } from 'typeorm'
-import EmployeeEntity from '../../typeorm/entities/employee.entity'
+import EmployeeEntity from '../../../../../typeorm/entities/employee.entity'
 import { EEmployeeError } from '@libs/utils'
 
 @Injectable()

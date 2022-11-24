@@ -2,9 +2,9 @@ import { EError, ETokenError } from '@libs/utils'
 import { HttpException, HttpStatus, Inject } from '@nestjs/common'
 import { ConfigType } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
+import EmployeeEntity from '../../../../../typeorm/entities/employee.entity'
 import { IJwtPayload } from '../../common/constants'
 import { JwtConfig } from '../../enviroments'
-import EmployeeEntity from '../../typeorm/entities/employee.entity'
 
 export class JwtExtendService {
 	constructor(

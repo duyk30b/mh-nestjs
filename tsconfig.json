@@ -35,8 +35,7 @@
   "include": [
     "apps/**/*.ts",
     "libs/**/*.ts",
-    "enviroments/**/*.ts",
-    "config/**/*.ts",
+    "typeorm/**/*.ts",
     ".eslintrc.js"
   ],
   "exclude": [

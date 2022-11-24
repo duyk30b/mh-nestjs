@@ -1,6 +1,6 @@
 import { Column, Entity, Index } from 'typeorm'
-import { EUserRole } from '../../common/constants'
-import { BaseEntity } from '../common/base.entity'
+import { EUserRole } from '../../apps/user/src/common/constants'
+import { BaseEntity } from '../base.entity'
 
 @Entity('employee')
 @Index(['clinicId', 'email'])

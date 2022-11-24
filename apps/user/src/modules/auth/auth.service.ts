@@ -2,9 +2,9 @@ import { ELoginError, ERegisterError, randomString } from '@libs/utils'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { DataSource } from 'typeorm'
+import ClinicEntity from '../../../../../typeorm/entities/clinic.entity'
+import EmployeeEntity from '../../../../../typeorm/entities/employee.entity'
 import { EUserRole } from '../../common/constants'
-import ClinicEntity from '../../typeorm/entities/clinic.entity'
-import EmployeeEntity from '../../typeorm/entities/employee.entity'
 import { LoginDto, RegisterDto } from './auth.dto'
 
 @Injectable()

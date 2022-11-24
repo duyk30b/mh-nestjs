@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
-import { MedicineService } from './medicine.service'
-import { MedicineController } from './medicine.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import MedicineEntity from '../../typeorm/entities/medicine.entity'
+import MedicineEntity from '../../../../../typeorm/entities/medicine.entity'
+import { MedicineController } from './medicine.controller'
+import { MedicineService } from './medicine.service'
 
 @Module({
 	imports: [TypeOrmModule.forFeature([MedicineEntity])],

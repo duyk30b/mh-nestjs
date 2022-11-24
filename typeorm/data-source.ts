@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv'
 import * as path from 'path'
 import { DataSource, DataSourceOptions } from 'typeorm'
 
-dotenv.config({ path: path.resolve(__dirname, '../', `.env.${process.env.NODE_ENV}`) })
+dotenv.config({ path: path.resolve(__dirname, '../', `.env.${process.env.NODE_ENV || 'local'}`) })
 
 export const dataSource = new DataSource({
 	type: 'mysql',
@@ -11,8 +11,8 @@ export const dataSource = new DataSource({
 	database: process.env.MYSQL_DATABASE,
 	username: process.env.MYSQL_USERNAME,
 	password: process.env.MYSQL_PASSWORD,
-	entities: [path.resolve(__dirname, '../apps/user/src/typeorm/entities/*.entity{.ts,.js}')],
-	migrations: [path.resolve(__dirname, '../apps/user/src/typeorm/migrations/*{.ts,.js}')],
-	migrationsTableName: 'tbl_typeorm_migration',
+	entities: [path.resolve(__dirname, './entities/*.entity.{ts,js}')],
+	migrations: [path.resolve(__dirname, './migrations/*.{ts,js}')],
+	migrationsTableName: 'typeorm_migration',
 	migrationsTransactionMode: 'each',
 } as DataSourceOptions)

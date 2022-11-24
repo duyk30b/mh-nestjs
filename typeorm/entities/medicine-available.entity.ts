@@ -1,5 +1,5 @@
 import { Column, Entity, Index } from 'typeorm'
-import { BaseEntity } from '../common/base.entity'
+import { BaseEntity } from '../base.entity'
 
 @Entity('medicine_available')
 @Index(['clinicId', 'medicineId'])
