@@ -8,8 +8,9 @@
   "scripts": {
     "start": "cross-env NODE_ENV=local nest start",
     "start:local": "cross-env NODE_ENV=local nest start --debug --watch",
-    "start:development": "cross-env NODE_ENV=development nest start --watch",
-    "start:production": "cross-env NODE_ENV=production node dist/main",
+    "start:development": "cross-env NODE_ENV=development nest start --debug --watch",
+    "start:production": "cross-env NODE_ENV=production node dist/apps/user/main",
+    "docker:dev": "docker compose --env-file .env.development up -d --build",
     "build": "nest build",
     "lint": "eslint \"apps/**/*.ts\" \"libs/**/*.ts\" --fix",
     "test": "jest",
@@ -21,7 +22,7 @@
     "migration:create": "typeorm-ts-node-commonjs migration:create ./typeorm/migrations/Example",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d ./typeorm/data-source.ts",
     "migration:revert": "typeorm-ts-node-commonjs migration:revert -d ./typeorm/data-source.ts",
-    "stop": "taskkill /f /im node.exe"
+    "stop:local": "taskkill /f /im node.exe"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",

@@ -1,23 +1,28 @@
-## I. RUN PROJECT
-### Prepare
+## I. Run project
+- Required: Intall **Docker**
+
+1. At docker in local, run `docker compose --env-file .env.development up -d --build`
+Now, access: http://localhost:7200/document
+
+2. At docker in production, run `docker compose --env-file .env.production up -d --build`
+Now, access: http://localhost:7200/document
+
+3. If you are also want to run **app** in localhost, and **database** is still installed on docker
+- Install nvm on Windows: https://github.com/coreybutler/nvm-windows/releases
+- Install nvm on Ubuntu: 
 ```
+sudo apt install curl 
+curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash 
+source ~/.bashrc   
+```
+- Install NodeJs and dependencies 
+```
+nvm install 16.18.1
 nvm use 16.18.1
 npm install
-npm run build
-docker compose build --no-cache
+npm run start:local
 ```
-
-### Run project
-1. At localhost
-- Run `npm run start:local`. Now, access: http://localhost:3000/document
-
-2. At docker in local
-- Delete image **mhi_nestjs:1.0.0** in docker image, or change version to **mhi_nestjs:1.0.1** in docker-compose.yml
-- Run `docker compose --env-file .env.development up -d` . Now, access: http://localhost:7300/document
-
-3. At docker in production
-- Delete image **mhi_nestjs:1.0.0** in docker image, or change version to **mhi_nestjs:1.0.1** in docker-compose.yml
-- Run `docker compose --env-file .env.production up -d` . Now, access: http://localhost:7300/document
+Now, access: http://localhost:7100/document
 
 ## II. MIGRATION
 1. At local, if hava change entity

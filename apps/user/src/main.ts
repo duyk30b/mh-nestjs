@@ -15,7 +15,8 @@ async function bootstrap() {
 	const app = await NestFactory.create(AppModule)
 
 	const configService = app.get(ConfigService)
-	const PORT = configService.get('SERVER_PORT')
+	const PORT = configService.get('SERVER_PORT') || 3000
+	const HOST = configService.get('SERVER_HOST') || 'localhost'
 
 	app.use(helmet())
 	app.use(rateLimit({
@@ -48,6 +49,8 @@ async function bootstrap() {
 		setupSwagger(app)
 	}
 
-	await app.listen(PORT)
+	await app.listen(PORT, () => {
+		console.log(`🚀 Server1111111111: http://${HOST}:${PORT}/document`)
+	})
 }
 bootstrap()

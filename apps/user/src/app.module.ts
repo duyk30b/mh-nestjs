@@ -35,7 +35,7 @@ export class AppModule implements NestModule {
 		consumer.apply(LoggerMiddleware).forRoutes('*')
 
 		consumer.apply(ValidateAccessTokenMiddleware)
-			.exclude('auth/(.*)')
+			.exclude('auth/(.*)', '/')
 			.forRoutes('*')
 	}
 }
