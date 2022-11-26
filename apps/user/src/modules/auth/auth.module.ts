@@ -12,7 +12,7 @@ import { JwtExtendService } from './jwt-extend.service'
 @Module({
 	imports: [
 		TypeOrmModule.forFeature([ClinicEntity, EmployeeEntity]),
-		ConfigModule.forRoot({ load: [JwtConfig] }),
+		ConfigModule.forFeature(JwtConfig),
 		JwtModule,
 	],
 	controllers: [AuthController],

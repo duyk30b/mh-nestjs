@@ -13,11 +13,11 @@ import { MedicineModule } from './modules/medicine/medicine.module'
 @Module({
 	imports: [
 		ConfigModule.forRoot({
-			envFilePath: ['.env', `.env.${process.env.NODE_ENV}`],
+			envFilePath: [`.env.${process.env.NODE_ENV || 'local'}`, '.env'],
 			isGlobal: true,
 		}),
 		TypeOrmModule.forRootAsync({
-			imports: [ConfigModule.forRoot({ load: [MysqlConfig] })],
+			imports: [ConfigModule.forFeature(MysqlConfig)],
 			inject: [MysqlConfig.KEY],
 			useFactory: (mysqlConfig: ConfigType<typeof MysqlConfig>) => mysqlConfig,
 			// inject: [ConfigService],

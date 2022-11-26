@@ -14,7 +14,7 @@ services:
     depends_on:
       - mysql
     build:
-      dockerfile: Dockerfile.${NODE_ENV:-production}
+      dockerfile: Dockerfile
       context: "./"
       target: ${NODE_ENV:-production}
     volumes:
@@ -40,4 +40,4 @@ services:
       - MYSQL_USER=medihome
       - MYSQL_PASSWORD=mh123456
     ports:
-      - "7306:3306"
+      - "7106:3306"

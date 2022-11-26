@@ -15,7 +15,7 @@ async function bootstrap() {
 	const app = await NestFactory.create(AppModule)
 
 	const configService = app.get(ConfigService)
-	const PORT = configService.get('SERVER_PORT') || 3000
+	const PORT = configService.get('SERVER_PORT')
 	const HOST = configService.get('SERVER_HOST') || 'localhost'
 
 	app.use(helmet())
@@ -50,7 +50,7 @@ async function bootstrap() {
 	}
 
 	await app.listen(PORT, () => {
-		console.log(`🚀 Server1111111111: http://${HOST}:${PORT}/document`)
+		console.log(`🚀 Server run: http://${HOST}:${PORT}/document`)
 	})
 }
 bootstrap()

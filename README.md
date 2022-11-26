@@ -4,6 +4,9 @@
 1. At docker in local, run `docker compose --env-file .env.development up -d --build`
 Now, access: http://localhost:7200/document
 
+2. At docker in staging, run `docker compose --env-file .env.staging up -d --build`
+Now, access: http://localhost:7200/document
+
 2. At docker in production, run `docker compose --env-file .env.production up -d --build`
 Now, access: http://localhost:7200/document
 
