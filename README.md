@@ -4,7 +4,7 @@
 1. At docker in local, run `docker compose --env-file .env.development up -d --build`
 Now, access: http://localhost:7200/document
 
-2. At docker in staging, run `docker compose --env-file .env.staging up -d --build`
+2. At docker in staging, run `docker compose -f docker-compose.staging.yml --env-file .env.staging up -d --build`
 Now, access: http://localhost:7200/document
 
 2. At docker in production, run `docker compose --env-file .env.production up -d --build`
@@ -36,3 +36,26 @@ Now, access: http://localhost:7100/document
 2. At docker
 - In **docker-compose.yml**, command in nestjs project include: migration and run
 - Run: `docker compose --env-file .env.development up -d` or `docker compose --env-file .env.development up -d`
+
+## III. Nginx
+1. SSL/TLS
+```
+openssl req -days 3650 -x509 -newkey rsa:2048 -sha256 -nodes -keyout %UserProfile%\Desktop\key.pem -out %UserProfile%\Desktop\cert.pem -subj "/C=/ST=/L=/O=/OU=web/CN=medihome.vn"
+
+sudo docker run -it --rm --name certbot -v "/etc/letsencrypt:/etc/letsencrypt" -v "/var/lib/letsencrypt:/var/lib/letsencrypt" -p 80:80 certbot/certbot certonly
+rm -rf ~/mh-nestjs/nginx/ssl/letsencrypt/
+cp -R /etc/letsencrypt/archive/ ~/mh-nestjs/nginx/ssl/letsencrypt/
+```
+
+2. Nginx
+- Check syntax: `docker exec mhc_nginx nginx -t`
+- Reload: `docker exec mhc_nginx nginx -s reload`
+
+## IV. Other
+1. Show all port: `netstat -tulpn`
+2. Github
+```
+git fetch --all
+git log --all --oneline --graph -10
+git reset --hard origin/master
+```

@@ -40,9 +40,8 @@ module.exports = {
 		'quote-props': [1, 'consistent-as-needed'],                               // dấu quote ở key của object -> dùng 1 cách nhất quán
 		'arrow-parens': 0,                                                        // bắt buộc (a)=>{} thay vì a=>{}
 		'@typescript-eslint/no-unused-vars': 0,
-		'comma-dangle': [                                                         // phần tử cuối cùng của mảng có dấu , ở cuối
-			1,
-			{
+		'comma-dangle': [
+			1, {
 				arrays: 'always-multiline',
 				objects: 'always-multiline',
 				imports: 'always-multiline',
@@ -51,6 +50,7 @@ module.exports = {
 			},
 		],
 		'comma-spacing': [1, { before: false, after: true }],                     // space trước và sau dấu ,
+		'comma-style': [1, 'last'],
 		'key-spacing': [1, { mode: 'strict' }],                                   // space trước và sau dấu : trong object
 		'block-spacing': [1, 'always'],                                           // space sau {, eg: {return} => { return }
 		'computed-property-spacing': [1, 'never'],                                // space trong property, eg: abc[ 'x'] => abc['x']

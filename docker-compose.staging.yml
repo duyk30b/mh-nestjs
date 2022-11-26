@@ -1,0 +1,55 @@
+version: '3.3'
+
+networks:
+  mh_network:
+    driver: bridge
+
+services:
+  nginx:
+    container_name: mhc_nginx
+    image: nginx:1.23.2-alpine
+    depends_on:
+      - nestjs
+      - mysql
+    restart: always
+    networks:
+      - mh_network
+    volumes:
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./nginx/ssl/:/etc/nginx/ssl/
+    ports:
+      - "80:80"
+      - "443:443"
+
+  nestjs:
+    container_name: mhc_nestjs
+    image: mhi_nestjs_${NODE_ENV:-production}:1.0.0
+    restart: unless-stopped
+    networks:
+      - mh_network
+    depends_on:
+      - mysql
+    build:
+      dockerfile: Dockerfile
+      context: "./"
+      target: ${NODE_ENV:-production}
+    volumes:
+      - ./apps:/app/apps
+    command: ["sh", "-c", "npm run migration:run && npm run start:${NODE_ENV:-production}"]
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+
+  mysql:
+    container_name: mhc_mysql
+    image: mysql:8.0.31
+    restart: always
+    networks:
+      - mh_network
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=medihome2022
+      - MYSQL_DATABASE=mh_database
+      - MYSQL_USER=medihome
+      - MYSQL_PASSWORD=mh123456
