@@ -7,10 +7,14 @@ import UserEntity from '../../../../../typeorm/entities/user.entity'
 import { EUserRole } from '../../common/constants'
 import { ELoginError, ERegisterError } from '../../exception-filters/exception.enum'
 import { LoginDto, RegisterDto } from './auth.dto'
+import { JwtExtendService } from './jwt-extend.service'
 
 @Injectable()
 export class AuthService {
-	constructor(private dataSource: DataSource) { }
+	constructor(
+		private dataSource: DataSource,
+		private jwtExtendService: JwtExtendService
+	) { }
 
 	async register(registerDto: RegisterDto): Promise<UserEntity> {
 		const { email, phone, password } = registerDto
@@ -72,5 +76,12 @@ export class AuthService {
 		}
 
 		return user
+	}
+
+	async grantAccessToken(refreshToken: string): Promise<string> {
+		const { uid } = this.jwtExtendService.verifyRefreshToken(refreshToken)
+		const user = await this.dataSource.manager.findOneBy(UserEntity, { id: uid })
+		const accessToken = this.jwtExtendService.createAccessToken(user)
+		return accessToken
 	}
 }

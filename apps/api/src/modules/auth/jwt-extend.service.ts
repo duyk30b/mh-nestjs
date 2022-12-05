@@ -12,33 +12,33 @@ export class JwtExtendService {
 		private readonly jwtService: JwtService
 	) { }
 
-	createAccessToken(payload: object) {
-		return this.jwtService.sign(payload, {
-			secret: this.jwtConfig.accessKey,
-			expiresIn: this.jwtConfig.accessTime,
-		})
-	}
-
-	createRefreshToken(payload: object) {
-		return this.jwtService.sign(payload, {
-			secret: this.jwtConfig.refreshKey,
-			expiresIn: this.jwtConfig.refreshTime,
-		})
-	}
-
-	createTokenFromUser(user: UserEntity) {
+	createAccessToken(user: UserEntity): string {
 		const userPayload: IJwtPayload = {
 			username: user.username,
 			role: user.role,
 			uid: user.id,
 			cid: user.clinicId,
 		}
-		const accessToken = this.createAccessToken(userPayload)
-		const refreshToken = this.createRefreshToken(userPayload)
+		return this.jwtService.sign(userPayload, {
+			secret: this.jwtConfig.accessKey,
+			expiresIn: this.jwtConfig.accessTime,
+		})
+	}
+
+	createRefreshToken(uid: number): string {
+		return this.jwtService.sign({ uid }, {
+			secret: this.jwtConfig.refreshKey,
+			expiresIn: this.jwtConfig.refreshTime,
+		})
+	}
+
+	createTokenFromUser(user: UserEntity) {
+		const accessToken = this.createAccessToken(user)
+		const refreshToken = this.createRefreshToken(user.id)
 		return { accessToken, refreshToken }
 	}
 
-	verifyAccessToken(accessToken: string) {
+	verifyAccessToken(accessToken: string): IJwtPayload {
 		try {
 			return this.jwtService.verify(accessToken, { secret: this.jwtConfig.accessKey })
 		} catch (error) {
@@ -51,14 +51,14 @@ export class JwtExtendService {
 		}
 	}
 
-	verifyRefreshToken(refreshToken: string) {
+	verifyRefreshToken(refreshToken: string): { uid: number } {
 		try {
 			return this.jwtService.verify(refreshToken, { secret: this.jwtConfig.refreshKey })
 		} catch (error) {
 			if (error.name === 'TokenExpiredError') {
-				throw new HttpException(ETokenError.Expired, HttpStatus.UNAUTHORIZED)
+				throw new HttpException(ETokenError.Expired, HttpStatus.FORBIDDEN)
 			} else if (error.name === 'JsonWebTokenError') {
-				throw new HttpException(ETokenError.Invalid, HttpStatus.UNAUTHORIZED)
+				throw new HttpException(ETokenError.Invalid, HttpStatus.FORBIDDEN)
 			}
 			throw new HttpException(EError.Unknow, HttpStatus.INTERNAL_SERVER_ERROR)
 		}

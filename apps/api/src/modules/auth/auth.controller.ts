@@ -2,7 +2,7 @@ import { Body, Controller, Param, Post, Req } from '@nestjs/common'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { getClientIp } from 'request-ip'
-import { LoginDto, RegisterDto } from './auth.dto'
+import { LoginDto, RefreshTokenDto, RegisterDto } from './auth.dto'
 import { AuthService } from './auth.service'
 import { JwtExtendService } from './jwt-extend.service'
 
@@ -31,17 +31,23 @@ export class AuthController {
 	}
 
 	@Post('logout')
-	findOne(@Param('id') id: string) {
+	logout(@Param('id') id: string) {
 		// return this.authService.findOne(+id)
 	}
 
 	@Post('change-password')
-	update(@Param('id') id: string, @Body() updateAuthDto: LoginDto) {
+	changePassword(@Param('id') id: string, @Body() updateAuthDto: LoginDto) {
 		// return this.authService.update(+id, updateAuthDto)
 	}
 
 	@Post('forgot-password')
-	remove(@Param('id') id: string) {
+	forgotPassword(@Param('id') id: string) {
 		// return this.authService.remove(+id)
+	}
+
+	@Post('refresh-token')
+	async grantAccessToken(@Body() refreshTokenDto: RefreshTokenDto) {
+		const refreshToken = await this.authService.grantAccessToken(refreshTokenDto.refreshToken)
+		return { refreshToken }
 	}
 }

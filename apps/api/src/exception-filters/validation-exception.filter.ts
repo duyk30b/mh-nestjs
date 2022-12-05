@@ -22,7 +22,7 @@ export class ValidationExceptionFilter implements ExceptionFilter {
 		const ctx = host.switchToHttp()
 		const response = ctx.getResponse<Response>()
 		const request = ctx.getRequest<Request>()
-		const httpStatus = HttpStatus.BAD_REQUEST
+		const httpStatus = HttpStatus.UNPROCESSABLE_ENTITY
 		const message = exception.getMessage()
 		const errors = exception.getErrors()
 

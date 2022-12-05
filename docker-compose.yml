@@ -20,7 +20,7 @@ services:
     volumes:
       - ./apps:/app/apps
       - ./typeorm:/app/typeorm
-    command: ["sh", "-c", "npm run migration:run && npm run start:${NODE_ENV:-production}"]
+    command: ["sh", "-c", "npm run start:${NODE_ENV:-production}"]
     environment:
       - NODE_ENV=${NODE_ENV:-production}
     ports:
