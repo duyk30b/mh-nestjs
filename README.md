@@ -30,8 +30,7 @@ Now, access: http://localhost:7100/document
 ## II. MIGRATION
 1. At local, if hava change entity
 - Run `npm run migration:generate` ==> create new migration in ./src/typeorm/migrations
-- Run `npm build` ==> create new migration in ./dist/typeorm/migrations
-- Run `npm run migration:run:local` ==> up migrate to database and run migration
+- Run `npm run migration:run` ==> up migrate to database and run migration
 
 2. At docker
 - In **docker-compose.yml**, command in nestjs project include: migration and run
@@ -59,3 +58,7 @@ git fetch --all
 git log --all --oneline --graph -10
 git reset --hard origin/master
 ```
+3. NestJS
+- Create new app: `nest generate app my-app`
+- Create new library: `nest g library my-library`
+- Create new module: `nest g resource my-module`

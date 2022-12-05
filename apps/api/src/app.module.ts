@@ -7,7 +7,7 @@ import { LoggerMiddleware } from './middlewares/logger.middleware'
 import { ValidateAccessTokenMiddleware } from './middlewares/validate-access-token.middleware'
 import { AuthModule } from './modules/auth/auth.module'
 import { ClinicModule } from './modules/clinic/clinic.module'
-import { EmployeeModule } from './modules/employee/employee.module'
+import { UserModule } from './modules/user/user.module'
 import { MedicineModule } from './modules/medicine/medicine.module'
 
 @Module({
@@ -25,7 +25,7 @@ import { MedicineModule } from './modules/medicine/medicine.module'
 		}),
 		AuthModule,
 		ClinicModule,
-		EmployeeModule,
+		UserModule,
 		MedicineModule,
 	],
 })

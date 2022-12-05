@@ -2,7 +2,7 @@ import { Column, Entity, Index } from 'typeorm'
 import { BaseEntity } from '../base.entity'
 
 @Entity('medicine_delivery_note')
-@Index(['clinicId', 'employeeId'])
+@Index(['clinicId', 'userId'])
 @Index(['clinicId', 'customerId'])
 export default class MedicineDeliveryNoteEntity extends BaseEntity {
 	@Column({ name: 'clinic_id' })
@@ -11,6 +11,6 @@ export default class MedicineDeliveryNoteEntity extends BaseEntity {
 	@Column({ name: 'customer_id' })
 	customerId: number
 
-	@Column({ name: 'employee_id' })
-	employeeId: number
+	@Column({ name: 'user_id' })
+	userId: number
 }

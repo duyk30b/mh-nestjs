@@ -22,6 +22,6 @@ export enum ETokenError {
 	Invalid = 'T02.INVALID'
 }
 
-export enum EEmployeeError {
-	UsernameExists = 'E01.Username_Exists'
+export enum EUserError {
+	UsernameExists = 'U01.Username_Exists'
 }

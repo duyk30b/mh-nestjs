@@ -1,10 +1,10 @@
-import { EError, ETokenError } from '@libs/utils'
 import { HttpException, HttpStatus, Inject } from '@nestjs/common'
 import { ConfigType } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
-import EmployeeEntity from '../../../../../typeorm/entities/employee.entity'
+import UserEntity from '../../../../../typeorm/entities/user.entity'
 import { IJwtPayload } from '../../common/constants'
 import { JwtConfig } from '../../enviroments'
+import { EError, ETokenError } from '../../exception-filters/exception.enum'
 
 export class JwtExtendService {
 	constructor(
@@ -26,15 +26,15 @@ export class JwtExtendService {
 		})
 	}
 
-	createTokenFromEmployee(employee: EmployeeEntity) {
-		const employeePaylod: IJwtPayload = {
-			username: employee.username,
-			role: employee.role,
-			uid: employee.id,
-			cid: employee.clinicId,
+	createTokenFromUser(user: UserEntity) {
+		const userPayload: IJwtPayload = {
+			username: user.username,
+			role: user.role,
+			uid: user.id,
+			cid: user.clinicId,
 		}
-		const accessToken = this.createAccessToken(employeePaylod)
-		const refreshToken = this.createRefreshToken(employeePaylod)
+		const accessToken = this.createAccessToken(userPayload)
+		const refreshToken = this.createRefreshToken(userPayload)
 		return { accessToken, refreshToken }
 	}
 
