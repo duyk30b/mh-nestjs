@@ -1,16 +1,8 @@
-## I. Run project
+## I. Run project in local
 - Required: Intall **Docker**
 
-1. At docker in local, run `docker compose --env-file .env.development up -d --build`
-Now, access: http://localhost:7200/document
-
-2. At docker in staging, run `docker compose -f docker-compose.staging.yml --env-file .env.staging up -d --build`
-Now, access: http://localhost:7200/document
-
-2. At docker in production, run `docker compose --env-file .env.production up -d --build`
-Now, access: http://localhost:7200/document
-
-3. If you are also want to run **app** in localhost, and **database** is still installed on docker
+1. Run Database: `docker compose up mariadb -d`
+2. Install Nodejs
 - Install nvm on Windows: https://github.com/coreybutler/nvm-windows/releases
 - Install nvm on Ubuntu: 
 ```
@@ -18,23 +10,29 @@ sudo apt install curl
 curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash 
 source ~/.bashrc   
 ```
-- Install NodeJs and dependencies 
+- Install NodeJs 16 and dependencies 
 ```
 nvm install 16.18.1
 nvm use 16.18.1
 npm install
-npm run start:local
 ```
-Now, access: http://localhost:7100/document
+3. Run migration for create database entity: `npm run migration:run`
+4. Run NestJS: `npm run start:local`
+5. Now, access: http://localhost:7100/document
+6. When change entity, create migration: `npm run migration:generate` or `npm run migration:create`
+7. When build: `npm run build`
 
-## II. MIGRATION
-1. At local, if hava change entity
-- Run `npm run migration:generate` ==> create new migration in ./src/typeorm/migrations
-- Run `npm run migration:run` ==> up migrate to database and run migration
+## I. Run project in Docker
+- Required: Intall **Docker**
 
-2. At docker
-- In **docker-compose.yml**, command in nestjs project include: migration and run
-- Run: `docker compose --env-file .env.development up -d` or `docker compose --env-file .env.development up -d`
+1. At docker in local, run `docker compose --env-file .env.development up -d --build`
+Now, access: http://localhost:7200/document
+
+2. At docker in staging, run `docker compose -f docker-compose.staging.yml --env-file .env.staging up -d --build`
+Now, access: http://localhost:7300/document
+
+3. At docker in production, Pending ... 
+Now, access: http://localhost:7400/document
 
 ## III. Nginx
 1. SSL/TLS
@@ -62,3 +60,6 @@ git reset --hard origin/master
 - Create new app: `nest generate app my-app`
 - Create new library: `nest g library my-library`
 - Create new module: `nest g resource my-module`
+
+4. Linux
+- List venv: `printenv`

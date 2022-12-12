@@ -1,12 +1,5 @@
 import { Request } from 'express'
-
-export enum EUserRole {
-	Owner = 'Owner',
-	Admin = 'Admin',
-	User = 'User',
-}
-
-export type TUserRole = keyof typeof EUserRole
+import { TUserRole } from '../../../../typeorm/entities/user.entity'
 
 export interface IJwtPayload {
 	username: string,

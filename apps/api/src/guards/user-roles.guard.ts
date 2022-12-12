@@ -1,7 +1,8 @@
 import { CanActivate, ExecutionContext, Injectable, SetMetadata } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { Observable } from 'rxjs'
-import { RequestToken, TUserRole } from '../common/constants'
+import { TUserRole } from 'typeorm/entities/user.entity'
+import { RequestToken } from '../common/constants'
 
 export const UserRoles = (...userRoles: TUserRole[]) => SetMetadata('user_roles', userRoles)
 @Injectable()

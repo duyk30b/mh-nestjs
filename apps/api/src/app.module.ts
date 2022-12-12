@@ -2,13 +2,13 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { ConfigModule, ConfigType } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { DataSource } from 'typeorm'
-import { MysqlConfig } from './enviroments'
+import { MariadbConfig } from './enviroments'
 import { LoggerMiddleware } from './middlewares/logger.middleware'
 import { ValidateAccessTokenMiddleware } from './middlewares/validate-access-token.middleware'
 import { AuthModule } from './modules/auth/auth.module'
 import { ClinicModule } from './modules/clinic/clinic.module'
-import { UserModule } from './modules/user/user.module'
 import { MedicineModule } from './modules/medicine/medicine.module'
+import { UserModule } from './modules/user/user.module'
 
 @Module({
 	imports: [
@@ -17,9 +17,9 @@ import { MedicineModule } from './modules/medicine/medicine.module'
 			isGlobal: true,
 		}),
 		TypeOrmModule.forRootAsync({
-			imports: [ConfigModule.forFeature(MysqlConfig)],
-			inject: [MysqlConfig.KEY],
-			useFactory: (mysqlConfig: ConfigType<typeof MysqlConfig>) => mysqlConfig,
+			imports: [ConfigModule.forFeature(MariadbConfig)],
+			inject: [MariadbConfig.KEY],
+			useFactory: (mariadbConfig: ConfigType<typeof MariadbConfig>) => mariadbConfig,
 			// inject: [ConfigService],
 			// useFactory: (configService: ConfigService) => configService.get('mysql'),
 		}),

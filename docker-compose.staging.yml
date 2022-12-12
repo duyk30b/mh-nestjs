@@ -5,12 +5,42 @@ networks:
     driver: bridge
 
 services:
+  mariadb:
+    container_name: mhc_mariadb
+    image: mariadb:10.9.4
+    restart: always
+    networks:
+      - mh_network
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+    environment:
+      - MARIADB_ROOT_PASSWORD=medihome2022
+      - MARIADB_DATABASE=${MARIADB_DATABASE:-mh_database}
+      - MARIADB_USER=${MARIADB_USER:-medihome}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD:-mh123456}
+
+  nestjs:
+    container_name: mhc_nestjs
+    image: mhi_nestjs_${NODE_ENV:-staging}:1.0.0
+    restart: unless-stopped
+    networks:
+      - mh_network
+    depends_on:
+      - mariadb
+    build:
+      dockerfile: Dockerfile
+      context: "./"
+      target: ${NODE_ENV:-staging}
+    command: ["sh", "-c", "npm run migration:run && npm run start:${NODE_ENV:-staging}"]
+    environment:
+      - NODE_ENV=${NODE_ENV:-staging}
+
   nginx:
     container_name: mhc_nginx
     image: nginx:1.23.2-alpine
     depends_on:
       - nestjs
-      - mysql
+      - mariadb
     restart: always
     networks:
       - mh_network
@@ -20,36 +50,3 @@ services:
     ports:
       - "80:80"
       - "443:443"
-
-  nestjs:
-    container_name: mhc_nestjs
-    image: mhi_nestjs_${NODE_ENV:-production}:1.0.0
-    restart: unless-stopped
-    networks:
-      - mh_network
-    depends_on:
-      - mysql
-    build:
-      dockerfile: Dockerfile
-      context: "./"
-      target: ${NODE_ENV:-production}
-    volumes:
-      - ./apps:/app/apps
-    command: ["sh", "-c", "npm run start:${NODE_ENV:-production}"]
-    environment:
-      - NODE_ENV=${NODE_ENV:-production}
-
-  mysql:
-    container_name: mhc_mysql
-    image: mysql:8.0.31
-    restart: always
-    networks:
-      - mh_network
-    command: --default-authentication-plugin=mysql_native_password
-    volumes:
-      - ./data/mysql:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=medihome2022
-      - MYSQL_DATABASE=mh_database
-      - MYSQL_USER=medihome
-      - MYSQL_PASSWORD=mh123456

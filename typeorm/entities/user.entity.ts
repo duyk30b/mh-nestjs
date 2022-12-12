@@ -1,6 +1,13 @@
 import { Column, Entity, Index } from 'typeorm'
-import { EUserRole } from '../../apps/api/src/common/constants'
 import { BaseEntity } from '../base.entity'
+
+export enum EUserRole {
+	Owner = 'Owner',
+	Admin = 'Admin',
+	User = 'User',
+}
+
+export type TUserRole = keyof typeof EUserRole
 
 @Entity('user')
 @Index(['clinicId', 'email'])

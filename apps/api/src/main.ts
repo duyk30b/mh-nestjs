@@ -15,10 +15,10 @@ import { TimeoutInterceptor } from './interceptor/timeout.interceptor'
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule)
-
+	
 	const configService = app.get(ConfigService)
-	const PORT = configService.get('SERVER_PORT')
-	const HOST = configService.get('SERVER_HOST') || 'localhost'
+	const PORT = configService.get('NESTJS_PORT')
+	const HOST = configService.get('NESTJS_HOST') || 'localhost'
 
 	app.use(helmet())
 	app.use(rateLimit({
@@ -52,7 +52,7 @@ async function bootstrap() {
 	}
 
 	await app.listen(PORT, () => {
-		console.log(`🚀 Server run: http://${HOST}:${PORT}/document`)
+		console.log(`🚀 Server document: http://${HOST}:${PORT}/document`)
 	})
 }
 bootstrap()

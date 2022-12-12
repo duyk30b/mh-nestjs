@@ -62,9 +62,9 @@ const enviroments_1 = __webpack_require__(10);
 const logger_middleware_1 = __webpack_require__(11);
 const validate_access_token_middleware_1 = __webpack_require__(12);
 const auth_module_1 = __webpack_require__(16);
-const clinic_module_1 = __webpack_require__(32);
-const user_module_1 = __webpack_require__(36);
-const medicine_module_1 = __webpack_require__(42);
+const clinic_module_1 = __webpack_require__(31);
+const medicine_module_1 = __webpack_require__(35);
+const user_module_1 = __webpack_require__(41);
 let AppModule = class AppModule {
     constructor(dataSource) {
         this.dataSource = dataSource;
@@ -84,9 +84,9 @@ AppModule = __decorate([
                 isGlobal: true,
             }),
             typeorm_1.TypeOrmModule.forRootAsync({
-                imports: [config_1.ConfigModule.forFeature(enviroments_1.MysqlConfig)],
-                inject: [enviroments_1.MysqlConfig.KEY],
-                useFactory: (mysqlConfig) => mysqlConfig,
+                imports: [config_1.ConfigModule.forFeature(enviroments_1.MariadbConfig)],
+                inject: [enviroments_1.MariadbConfig.KEY],
+                useFactory: (mariadbConfig) => mariadbConfig,
             }),
             auth_module_1.AuthModule,
             clinic_module_1.ClinicModule,
@@ -117,7 +117,7 @@ module.exports = require("typeorm");
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.MysqlConfig = exports.JwtConfig = void 0;
+exports.MariadbConfig = exports.JwtConfig = void 0;
 const config_1 = __webpack_require__(2);
 exports.JwtConfig = (0, config_1.registerAs)('jwt', () => ({
     accessKey: process.env.JWT_ACCESS_KEY,
@@ -125,13 +125,13 @@ exports.JwtConfig = (0, config_1.registerAs)('jwt', () => ({
     accessTime: Number(process.env.JWT_ACCESS_TIME),
     refreshTime: Number(process.env.JWT_REFRESH_TIME),
 }));
-exports.MysqlConfig = (0, config_1.registerAs)('mysql', () => ({
-    type: 'mysql',
-    host: process.env.MYSQL_HOST,
-    port: parseInt(process.env.MYSQL_PORT, 10),
-    database: process.env.MYSQL_DATABASE,
-    username: process.env.MYSQL_USERNAME,
-    password: process.env.MYSQL_PASSWORD,
+exports.MariadbConfig = (0, config_1.registerAs)('mariadb', () => ({
+    type: 'mariadb',
+    host: process.env.MARIADB_HOST,
+    port: parseInt(process.env.MARIADB_PORT, 10),
+    database: process.env.MARIADB_DATABASE,
+    username: process.env.MARIADB_USERNAME,
+    password: process.env.MARIADB_PASSWORD,
     autoLoadEntities: true,
     logging: process.env.NODE_ENV !== 'production',
     synchronize: process.env.NODE_ENV === 'local',
@@ -354,8 +354,8 @@ const typeorm_1 = __webpack_require__(8);
 const clinic_entity_1 = __webpack_require__(17);
 const user_entity_1 = __webpack_require__(19);
 const enviroments_1 = __webpack_require__(10);
-const auth_controller_1 = __webpack_require__(21);
-const auth_service_1 = __webpack_require__(27);
+const auth_controller_1 = __webpack_require__(20);
+const auth_service_1 = __webpack_require__(26);
 const jwt_extend_service_1 = __webpack_require__(13);
 let AuthModule = class AuthModule {
 };
@@ -480,11 +480,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.EUserRole = void 0;
 const typeorm_1 = __webpack_require__(9);
-const constants_1 = __webpack_require__(20);
 const base_entity_1 = __webpack_require__(18);
+var EUserRole;
+(function (EUserRole) {
+    EUserRole["Owner"] = "Owner";
+    EUserRole["Admin"] = "Admin";
+    EUserRole["User"] = "User";
+})(EUserRole = exports.EUserRole || (exports.EUserRole = {}));
 let UserEntity = class UserEntity extends base_entity_1.BaseEntity {
 };
 __decorate([
@@ -512,8 +517,8 @@ __decorate([
     __metadata("design:type", String)
 ], UserEntity.prototype, "address", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'enum', enum: constants_1.EUserRole, default: constants_1.EUserRole.User }),
-    __metadata("design:type", typeof (_a = typeof constants_1.EUserRole !== "undefined" && constants_1.EUserRole) === "function" ? _a : Object)
+    (0, typeorm_1.Column)({ type: 'enum', enum: EUserRole, default: EUserRole.User }),
+    __metadata("design:type", String)
 ], UserEntity.prototype, "role", void 0);
 UserEntity = __decorate([
     (0, typeorm_1.Entity)('user'),
@@ -525,21 +530,6 @@ exports["default"] = UserEntity;
 
 /***/ }),
 /* 20 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.EUserRole = void 0;
-var EUserRole;
-(function (EUserRole) {
-    EUserRole["Owner"] = "Owner";
-    EUserRole["Admin"] = "Admin";
-    EUserRole["User"] = "User";
-})(EUserRole = exports.EUserRole || (exports.EUserRole = {}));
-
-
-/***/ }),
-/* 21 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -559,11 +549,11 @@ var _a, _b, _c, _d, _e, _f, _g;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthController = void 0;
 const common_1 = __webpack_require__(1);
-const swagger_1 = __webpack_require__(22);
-const express_1 = __webpack_require__(23);
+const swagger_1 = __webpack_require__(21);
+const express_1 = __webpack_require__(22);
 const request_ip_1 = __webpack_require__(6);
-const auth_dto_1 = __webpack_require__(24);
-const auth_service_1 = __webpack_require__(27);
+const auth_dto_1 = __webpack_require__(23);
+const auth_service_1 = __webpack_require__(26);
 const jwt_extend_service_1 = __webpack_require__(13);
 let AuthController = class AuthController {
     constructor(authService, jwtExtendService) {
@@ -646,19 +636,19 @@ exports.AuthController = AuthController;
 
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/swagger");
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ ((module) => {
 
 module.exports = require("express");
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -673,9 +663,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RefreshTokenDto = exports.LoginDto = exports.RegisterDto = void 0;
-const swagger_1 = __webpack_require__(22);
-const class_validator_1 = __webpack_require__(25);
-const class_validator_custom_1 = __webpack_require__(26);
+const swagger_1 = __webpack_require__(21);
+const class_validator_1 = __webpack_require__(24);
+const class_validator_custom_1 = __webpack_require__(25);
 class RegisterDto {
 }
 __decorate([
@@ -725,13 +715,13 @@ exports.RefreshTokenDto = RefreshTokenDto;
 
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ ((module) => {
 
 module.exports = require("class-validator");
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -743,7 +733,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.IsGmail = exports.IsPhone = void 0;
-const class_validator_1 = __webpack_require__(25);
+const class_validator_1 = __webpack_require__(24);
 let IsPhone = class IsPhone {
     validate(text, args) {
         return /((09|03|07|08|05)+([0-9]{8})\b)/g.test(text);
@@ -771,7 +761,7 @@ exports.IsGmail = IsGmail;
 
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -787,13 +777,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthService = void 0;
-const utils_1 = __webpack_require__(28);
+const utils_1 = __webpack_require__(27);
 const common_1 = __webpack_require__(1);
-const bcrypt = __webpack_require__(31);
+const bcrypt = __webpack_require__(30);
 const typeorm_1 = __webpack_require__(9);
 const clinic_entity_1 = __webpack_require__(17);
 const user_entity_1 = __webpack_require__(19);
-const constants_1 = __webpack_require__(20);
 const exception_enum_1 = __webpack_require__(15);
 const jwt_extend_service_1 = __webpack_require__(13);
 let AuthService = class AuthService {
@@ -807,8 +796,8 @@ let AuthService = class AuthService {
         const { user } = await this.dataSource.transaction(async (manager) => {
             const findUser = await manager.findOne(user_entity_1.default, {
                 where: [
-                    { email, role: constants_1.EUserRole.Owner },
-                    { phone, role: constants_1.EUserRole.Owner },
+                    { email, role: user_entity_1.EUserRole.Owner },
+                    { phone, role: user_entity_1.EUserRole.Owner },
                 ],
             });
             if (findUser) {
@@ -833,7 +822,7 @@ let AuthService = class AuthService {
                 phone,
                 username: 'Admin',
                 password: hashPassword,
-                role: constants_1.EUserRole.Owner,
+                role: user_entity_1.EUserRole.Owner,
             });
             const newUser = await manager.save(createUser);
             return { clinic: newClinic, user: newUser };
@@ -872,7 +861,7 @@ exports.AuthService = AuthService;
 
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -891,12 +880,12 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(28), exports);
 __exportStar(__webpack_require__(29), exports);
-__exportStar(__webpack_require__(30), exports);
 
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -975,7 +964,7 @@ exports.formatNumber = formatNumber;
 
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -1030,13 +1019,13 @@ exports.textToTime = textToTime;
 
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ ((module) => {
 
 module.exports = require("bcrypt");
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1051,8 +1040,8 @@ exports.ClinicModule = void 0;
 const common_1 = __webpack_require__(1);
 const typeorm_1 = __webpack_require__(8);
 const clinic_entity_1 = __webpack_require__(17);
-const clinic_controller_1 = __webpack_require__(33);
-const clinic_service_1 = __webpack_require__(34);
+const clinic_controller_1 = __webpack_require__(32);
+const clinic_service_1 = __webpack_require__(33);
 let ClinicModule = class ClinicModule {
 };
 ClinicModule = __decorate([
@@ -1067,7 +1056,7 @@ exports.ClinicModule = ClinicModule;
 
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1087,9 +1076,9 @@ var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ClinicController = void 0;
 const common_1 = __webpack_require__(1);
-const clinic_service_1 = __webpack_require__(34);
-const clinic_dto_1 = __webpack_require__(35);
-const swagger_1 = __webpack_require__(22);
+const clinic_service_1 = __webpack_require__(33);
+const clinic_dto_1 = __webpack_require__(34);
+const swagger_1 = __webpack_require__(21);
 let ClinicController = class ClinicController {
     constructor(clinicService) {
         this.clinicService = clinicService;
@@ -1144,7 +1133,7 @@ exports.ClinicController = ClinicController;
 
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1194,7 +1183,7 @@ exports.ClinicService = ClinicService;
 
 
 /***/ }),
-/* 35 */
+/* 34 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1209,8 +1198,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateClinicDto = exports.CreateClinicDto = void 0;
-const swagger_1 = __webpack_require__(22);
-const class_validator_1 = __webpack_require__(25);
+const swagger_1 = __webpack_require__(21);
+const class_validator_1 = __webpack_require__(24);
 class CreateClinicDto {
 }
 __decorate([
@@ -1232,7 +1221,7 @@ exports.UpdateClinicDto = UpdateClinicDto;
 
 
 /***/ }),
-/* 36 */
+/* 35 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1243,22 +1232,68 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserModule = void 0;
+exports.MedicineModule = void 0;
 const common_1 = __webpack_require__(1);
-const user_service_1 = __webpack_require__(37);
-const user_controller_1 = __webpack_require__(38);
 const typeorm_1 = __webpack_require__(8);
-const user_entity_1 = __webpack_require__(19);
-let UserModule = class UserModule {
+const medicine_entity_1 = __webpack_require__(36);
+const medicine_controller_1 = __webpack_require__(37);
+const medicine_service_1 = __webpack_require__(40);
+let MedicineModule = class MedicineModule {
 };
-UserModule = __decorate([
+MedicineModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([user_entity_1.default])],
-        controllers: [user_controller_1.UserController],
-        providers: [user_service_1.UserService],
+        imports: [typeorm_1.TypeOrmModule.forFeature([medicine_entity_1.default])],
+        controllers: [medicine_controller_1.MedicineController],
+        providers: [medicine_service_1.MedicineService],
     })
-], UserModule);
-exports.UserModule = UserModule;
+], MedicineModule);
+exports.MedicineModule = MedicineModule;
+
+
+/***/ }),
+/* 36 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const typeorm_1 = __webpack_require__(9);
+const base_entity_1 = __webpack_require__(18);
+let MedicineEntity = class MedicineEntity extends base_entity_1.BaseEntity {
+};
+__decorate([
+    (0, typeorm_1.Column)({ name: 'clinic_id' }),
+    __metadata("design:type", Number)
+], MedicineEntity.prototype, "clinicId", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'brand_name', nullable: true }),
+    __metadata("design:type", String)
+], MedicineEntity.prototype, "brandName", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'chemical_name', nullable: true }),
+    __metadata("design:type", String)
+], MedicineEntity.prototype, "chemicalName", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'calculation_unit', nullable: true }),
+    __metadata("design:type", String)
+], MedicineEntity.prototype, "calculationUnit", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'image', nullable: true }),
+    __metadata("design:type", String)
+], MedicineEntity.prototype, "image", void 0);
+MedicineEntity = __decorate([
+    (0, typeorm_1.Entity)('medicine'),
+    (0, typeorm_1.Index)(['clinicId', 'id'], { unique: true })
+], MedicineEntity);
+exports["default"] = MedicineEntity;
 
 
 /***/ }),
@@ -1275,11 +1310,193 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b, _c;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MedicineController = void 0;
+const common_1 = __webpack_require__(1);
+const swagger_1 = __webpack_require__(21);
+const create_medicine_dto_1 = __webpack_require__(38);
+const update_medicine_dto_1 = __webpack_require__(39);
+const medicine_service_1 = __webpack_require__(40);
+let MedicineController = class MedicineController {
+    constructor(medicineService) {
+        this.medicineService = medicineService;
+    }
+    create(createMedicineDto) {
+        return this.medicineService.create(createMedicineDto);
+    }
+    findAll() {
+        return this.medicineService.findAll();
+    }
+    findOne(id) {
+        return this.medicineService.findOne(+id);
+    }
+    update(id, updateMedicineDto) {
+        return this.medicineService.update(+id, updateMedicineDto);
+    }
+    remove(id) {
+        return this.medicineService.remove(+id);
+    }
+};
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_b = typeof create_medicine_dto_1.CreateMedicineDto !== "undefined" && create_medicine_dto_1.CreateMedicineDto) === "function" ? _b : Object]),
+    __metadata("design:returntype", void 0)
+], MedicineController.prototype, "create", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], MedicineController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], MedicineController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Patch)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, typeof (_c = typeof update_medicine_dto_1.UpdateMedicineDto !== "undefined" && update_medicine_dto_1.UpdateMedicineDto) === "function" ? _c : Object]),
+    __metadata("design:returntype", void 0)
+], MedicineController.prototype, "update", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], MedicineController.prototype, "remove", null);
+MedicineController = __decorate([
+    (0, swagger_1.ApiTags)('Medicine'),
+    (0, swagger_1.ApiBearerAuth)('access-token'),
+    (0, common_1.Controller)('medicine'),
+    __metadata("design:paramtypes", [typeof (_a = typeof medicine_service_1.MedicineService !== "undefined" && medicine_service_1.MedicineService) === "function" ? _a : Object])
+], MedicineController);
+exports.MedicineController = MedicineController;
+
+
+/***/ }),
+/* 38 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CreateMedicineDto = void 0;
+class CreateMedicineDto {
+}
+exports.CreateMedicineDto = CreateMedicineDto;
+
+
+/***/ }),
+/* 39 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateMedicineDto = void 0;
+const swagger_1 = __webpack_require__(21);
+const create_medicine_dto_1 = __webpack_require__(38);
+class UpdateMedicineDto extends (0, swagger_1.PartialType)(create_medicine_dto_1.CreateMedicineDto) {
+}
+exports.UpdateMedicineDto = UpdateMedicineDto;
+
+
+/***/ }),
+/* 40 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MedicineService = void 0;
+const common_1 = __webpack_require__(1);
+let MedicineService = class MedicineService {
+    create(createMedicineDto) {
+        return 'This action adds a new medicine';
+    }
+    findAll() {
+        return `This action returns all medicine`;
+    }
+    findOne(id) {
+        return `This action returns a #${id} medicine`;
+    }
+    update(id, updateMedicineDto) {
+        return `This action updates a #${id} medicine`;
+    }
+    remove(id) {
+        return `This action removes a #${id} medicine`;
+    }
+};
+MedicineService = __decorate([
+    (0, common_1.Injectable)()
+], MedicineService);
+exports.MedicineService = MedicineService;
+
+
+/***/ }),
+/* 41 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserModule = void 0;
+const common_1 = __webpack_require__(1);
+const user_service_1 = __webpack_require__(42);
+const user_controller_1 = __webpack_require__(43);
+const typeorm_1 = __webpack_require__(8);
+const user_entity_1 = __webpack_require__(19);
+let UserModule = class UserModule {
+};
+UserModule = __decorate([
+    (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([user_entity_1.default])],
+        controllers: [user_controller_1.UserController],
+        providers: [user_service_1.UserService],
+    })
+], UserModule);
+exports.UserModule = UserModule;
+
+
+/***/ }),
+/* 42 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserService = void 0;
 const common_1 = __webpack_require__(1);
-const bcrypt = __webpack_require__(31);
+const bcrypt = __webpack_require__(30);
 const typeorm_1 = __webpack_require__(9);
 const user_entity_1 = __webpack_require__(19);
 const exception_enum_1 = __webpack_require__(15);
@@ -1326,7 +1543,7 @@ exports.UserService = UserService;
 
 
 /***/ }),
-/* 38 */
+/* 43 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1346,12 +1563,12 @@ var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserController = void 0;
 const common_1 = __webpack_require__(1);
-const swagger_1 = __webpack_require__(22);
-const constants_1 = __webpack_require__(20);
-const user_roles_guard_1 = __webpack_require__(39);
-const create_user_dto_1 = __webpack_require__(40);
-const update_user_dto_1 = __webpack_require__(41);
-const user_service_1 = __webpack_require__(37);
+const swagger_1 = __webpack_require__(21);
+const constants_1 = __webpack_require__(44);
+const user_roles_guard_1 = __webpack_require__(45);
+const create_user_dto_1 = __webpack_require__(46);
+const update_user_dto_1 = __webpack_require__(47);
+const user_service_1 = __webpack_require__(42);
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
@@ -1420,7 +1637,15 @@ exports.UserController = UserController;
 
 
 /***/ }),
-/* 39 */
+/* 44 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+/* 45 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1461,7 +1686,7 @@ exports.UserRolesGuard = UserRolesGuard;
 
 
 /***/ }),
-/* 40 */
+/* 46 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1476,7 +1701,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateUserDto = void 0;
-const swagger_1 = __webpack_require__(22);
+const swagger_1 = __webpack_require__(21);
 class CreateUserDto {
 }
 __decorate([
@@ -1491,245 +1716,17 @@ exports.CreateUserDto = CreateUserDto;
 
 
 /***/ }),
-/* 41 */
+/* 47 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateUserDto = void 0;
-const swagger_1 = __webpack_require__(22);
-const create_user_dto_1 = __webpack_require__(40);
+const swagger_1 = __webpack_require__(21);
+const create_user_dto_1 = __webpack_require__(46);
 class UpdateUserDto extends (0, swagger_1.PartialType)(create_user_dto_1.CreateUserDto) {
 }
 exports.UpdateUserDto = UpdateUserDto;
-
-
-/***/ }),
-/* 42 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.MedicineModule = void 0;
-const common_1 = __webpack_require__(1);
-const typeorm_1 = __webpack_require__(8);
-const medicine_entity_1 = __webpack_require__(43);
-const medicine_controller_1 = __webpack_require__(44);
-const medicine_service_1 = __webpack_require__(47);
-let MedicineModule = class MedicineModule {
-};
-MedicineModule = __decorate([
-    (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([medicine_entity_1.default])],
-        controllers: [medicine_controller_1.MedicineController],
-        providers: [medicine_service_1.MedicineService],
-    })
-], MedicineModule);
-exports.MedicineModule = MedicineModule;
-
-
-/***/ }),
-/* 43 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const typeorm_1 = __webpack_require__(9);
-const base_entity_1 = __webpack_require__(18);
-let MedicineEntity = class MedicineEntity extends base_entity_1.BaseEntity {
-};
-__decorate([
-    (0, typeorm_1.Column)({ name: 'clinic_id' }),
-    __metadata("design:type", Number)
-], MedicineEntity.prototype, "clinicId", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ name: 'brand_name', nullable: true }),
-    __metadata("design:type", String)
-], MedicineEntity.prototype, "brandName", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ name: 'chemical_name', nullable: true }),
-    __metadata("design:type", String)
-], MedicineEntity.prototype, "chemicalName", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ name: 'calculation_unit', nullable: true }),
-    __metadata("design:type", String)
-], MedicineEntity.prototype, "calculationUnit", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ name: 'image', nullable: true }),
-    __metadata("design:type", String)
-], MedicineEntity.prototype, "image", void 0);
-MedicineEntity = __decorate([
-    (0, typeorm_1.Entity)('medicine'),
-    (0, typeorm_1.Index)(['clinicId', 'id'], { unique: true })
-], MedicineEntity);
-exports["default"] = MedicineEntity;
-
-
-/***/ }),
-/* 44 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-var _a, _b, _c;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.MedicineController = void 0;
-const common_1 = __webpack_require__(1);
-const swagger_1 = __webpack_require__(22);
-const create_medicine_dto_1 = __webpack_require__(45);
-const update_medicine_dto_1 = __webpack_require__(46);
-const medicine_service_1 = __webpack_require__(47);
-let MedicineController = class MedicineController {
-    constructor(medicineService) {
-        this.medicineService = medicineService;
-    }
-    create(createMedicineDto) {
-        return this.medicineService.create(createMedicineDto);
-    }
-    findAll() {
-        return this.medicineService.findAll();
-    }
-    findOne(id) {
-        return this.medicineService.findOne(+id);
-    }
-    update(id, updateMedicineDto) {
-        return this.medicineService.update(+id, updateMedicineDto);
-    }
-    remove(id) {
-        return this.medicineService.remove(+id);
-    }
-};
-__decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [typeof (_b = typeof create_medicine_dto_1.CreateMedicineDto !== "undefined" && create_medicine_dto_1.CreateMedicineDto) === "function" ? _b : Object]),
-    __metadata("design:returntype", void 0)
-], MedicineController.prototype, "create", null);
-__decorate([
-    (0, common_1.Get)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], MedicineController.prototype, "findAll", null);
-__decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], MedicineController.prototype, "findOne", null);
-__decorate([
-    (0, common_1.Patch)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, typeof (_c = typeof update_medicine_dto_1.UpdateMedicineDto !== "undefined" && update_medicine_dto_1.UpdateMedicineDto) === "function" ? _c : Object]),
-    __metadata("design:returntype", void 0)
-], MedicineController.prototype, "update", null);
-__decorate([
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], MedicineController.prototype, "remove", null);
-MedicineController = __decorate([
-    (0, swagger_1.ApiTags)('Medicine'),
-    (0, swagger_1.ApiBearerAuth)('access-token'),
-    (0, common_1.Controller)('medicine'),
-    __metadata("design:paramtypes", [typeof (_a = typeof medicine_service_1.MedicineService !== "undefined" && medicine_service_1.MedicineService) === "function" ? _a : Object])
-], MedicineController);
-exports.MedicineController = MedicineController;
-
-
-/***/ }),
-/* 45 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.CreateMedicineDto = void 0;
-class CreateMedicineDto {
-}
-exports.CreateMedicineDto = CreateMedicineDto;
-
-
-/***/ }),
-/* 46 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UpdateMedicineDto = void 0;
-const swagger_1 = __webpack_require__(22);
-const create_medicine_dto_1 = __webpack_require__(45);
-class UpdateMedicineDto extends (0, swagger_1.PartialType)(create_medicine_dto_1.CreateMedicineDto) {
-}
-exports.UpdateMedicineDto = UpdateMedicineDto;
-
-
-/***/ }),
-/* 47 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.MedicineService = void 0;
-const common_1 = __webpack_require__(1);
-let MedicineService = class MedicineService {
-    create(createMedicineDto) {
-        return 'This action adds a new medicine';
-    }
-    findAll() {
-        return `This action returns all medicine`;
-    }
-    findOne(id) {
-        return `This action returns a #${id} medicine`;
-    }
-    update(id, updateMedicineDto) {
-        return `This action updates a #${id} medicine`;
-    }
-    remove(id) {
-        return `This action removes a #${id} medicine`;
-    }
-};
-MedicineService = __decorate([
-    (0, common_1.Injectable)()
-], MedicineService);
-exports.MedicineService = MedicineService;
 
 
 /***/ }),
@@ -1739,7 +1736,7 @@ exports.MedicineService = MedicineService;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.setupSwagger = void 0;
-const swagger_1 = __webpack_require__(22);
+const swagger_1 = __webpack_require__(21);
 const setupSwagger = (app) => {
     const config = new swagger_1.DocumentBuilder()
         .setTitle('Simple API')
@@ -2005,14 +2002,14 @@ const swagger_1 = __webpack_require__(48);
 const http_exception_filter_1 = __webpack_require__(49);
 const unknow_exception_filter_1 = __webpack_require__(50);
 const validation_exception_filter_1 = __webpack_require__(51);
-const user_roles_guard_1 = __webpack_require__(39);
+const user_roles_guard_1 = __webpack_require__(45);
 const access_log_interceptor_1 = __webpack_require__(52);
 const timeout_interceptor_1 = __webpack_require__(54);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const configService = app.get(config_1.ConfigService);
-    const PORT = configService.get('SERVER_PORT');
-    const HOST = configService.get('SERVER_HOST') || 'localhost';
+    const PORT = configService.get('NESTJS_PORT');
+    const HOST = configService.get('NESTJS_HOST') || 'localhost';
     app.use((0, helmet_1.default)());
     app.use((0, express_rate_limit_1.default)({
         windowMs: 15 * 60 * 1000,
@@ -2032,7 +2029,7 @@ async function bootstrap() {
         (0, swagger_1.setupSwagger)(app);
     }
     await app.listen(PORT, () => {
-        console.log(`🚀 Server run: http://${HOST}:${PORT}/document`);
+        console.log(`🚀 Server document: http://${HOST}:${PORT}/document`);
     });
 }
 bootstrap();
