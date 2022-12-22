@@ -13,7 +13,7 @@ export enum ERegisterError {
 }
 
 export enum ELoginError {
-	UserDoesNotExist = 'L01.USER_DOES_NOT_EXIST',
+	EmployeeDoesNotExist = 'L01.EMPLOYEE_DOES_NOT_EXIST',
 	WrongPassword = 'L02.WRONG_PASSWORD'
 }
 
@@ -22,6 +22,6 @@ export enum ETokenError {
 	Invalid = 'T02.INVALID'
 }
 
-export enum EUserError {
-	UsernameExists = 'U01.Username_Exists'
+export enum EEmployeeError {
+	UsernameExists = 'U01.USERNAME_EXISTS'
 }

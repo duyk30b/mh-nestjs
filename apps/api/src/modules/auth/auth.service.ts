@@ -1,9 +1,8 @@
-import { randomString } from '@libs/utils'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { DataSource } from 'typeorm'
 import ClinicEntity from '../../../../../typeorm/entities/clinic.entity'
-import UserEntity, { EUserRole } from '../../../../../typeorm/entities/user.entity'
+import EmployeeEntity, { EEmployeeRole } from '../../../../../typeorm/entities/employee.entity'
 import { ELoginError, ERegisterError } from '../../exception-filters/exception.enum'
 import { LoginDto, RegisterDto } from './auth.dto'
 import { JwtExtendService } from './jwt-extend.service'
@@ -15,71 +14,63 @@ export class AuthService {
 		private jwtExtendService: JwtExtendService
 	) { }
 
-	async register(registerDto: RegisterDto): Promise<UserEntity> {
-		const { email, phone, password } = registerDto
+	async register(registerDto: RegisterDto): Promise<EmployeeEntity> {
+		const { email, phone, username, password } = registerDto
 		const hashPassword = await bcrypt.hash(password, 5)
 
-		const { user } = await this.dataSource.transaction(async (manager) => {
-			const findUser = await manager.findOne(UserEntity, {
-				where: [
-					{ email, role: EUserRole.Owner },
-					{ phone, role: EUserRole.Owner },
-				],
-			})
-			if (findUser) {
-				if (findUser.email === email && findUser.phone === phone) {
+		const { employee, clinic } = await this.dataSource.transaction(async (manager) => {
+			const findClinic = await manager.findOne(ClinicEntity, { where: [{ email }, { phone }] })
+			if (findClinic) {
+				if (findClinic.email === email && findClinic.phone === phone) {
 					throw new HttpException(ERegisterError.ExistEmailAndPhone, HttpStatus.BAD_REQUEST)
 				}
-				else if (findUser.email === email) {
+				else if (findClinic.email === email) {
 					throw new HttpException(ERegisterError.ExistEmail, HttpStatus.BAD_REQUEST)
 				}
-				else if (findUser.phone === phone) {
+				else if (findClinic.phone === phone) {
 					throw new HttpException(ERegisterError.ExistPhone, HttpStatus.BAD_REQUEST)
 				}
 			}
-
-			const createClinic = manager.create(ClinicEntity, {
-				code: randomString(5),
+			const snapClinic = manager.create(ClinicEntity, {
+				phone,
+				email,
 				level: 1,
 			})
-			const newClinic = await manager.save(createClinic)
+			const newClinic = await manager.save(snapClinic)
 
-			const createUser = manager.create(UserEntity, {
-				clinicId: newClinic.id,
-				email,
-				phone,
-				username: 'Admin',
+			const snapEmployee = manager.create(EmployeeEntity, {
+				cPhone: phone,
+				username,
 				password: hashPassword,
-				role: EUserRole.Owner,
+				role: EEmployeeRole.Owner,
 			})
-			const newUser = await manager.save(createUser)
-			return { clinic: newClinic, user: newUser }
+			const newEmployee = await manager.save(snapEmployee)
+			return { clinic: newClinic, employee: newEmployee }
 		})
-		return user
+		return employee
 	}
 
-	async login(loginDto: LoginDto): Promise<UserEntity> {
-		let user: UserEntity
-		if (loginDto.email) {
-			user = await this.dataSource.manager.findOneBy(UserEntity, { email: loginDto.email })
-		} else if (loginDto.username) {
-			user = await this.dataSource.manager.findOneBy(UserEntity, { username: loginDto.username })
-		}
-		if (!user) {
-			throw new HttpException(ELoginError.UserDoesNotExist, HttpStatus.BAD_REQUEST)
+	async login(loginDto: LoginDto): Promise<EmployeeEntity> {
+		const employee = await this.dataSource.manager.findOneBy(EmployeeEntity, {
+			cPhone: loginDto.cPhone,
+			username: loginDto.username,
+		})
+
+		if (!employee) {
+			throw new HttpException(ELoginError.EmployeeDoesNotExist, HttpStatus.BAD_REQUEST)
 		}
 
-		const checkPassword = await bcrypt.compare(loginDto.password, user.password)
+		const checkPassword = await bcrypt.compare(loginDto.password, employee.password)
 		if (!checkPassword) {
 			throw new HttpException(ELoginError.WrongPassword, HttpStatus.BAD_GATEWAY)
 		}
 
-		return user
+		return employee
 	}
 
 	async grantAccessToken(refreshToken: string): Promise<string> {
 		const { uid } = this.jwtExtendService.verifyRefreshToken(refreshToken)
-		const user = await this.dataSource.manager.findOneBy(UserEntity, { id: uid })
+		const user = await this.dataSource.manager.findOneBy(EmployeeEntity, { id: uid })
 		const accessToken = this.jwtExtendService.createAccessToken(user)
 		return accessToken
 	}

@@ -1,17 +1,8 @@
-import {
-	PrimaryGeneratedColumn, Column,
-	CreateDateColumn, UpdateDateColumn, DeleteDateColumn, VersionColumn,
-} from 'typeorm'
+import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
 export class BaseEntity {
 	@PrimaryGeneratedColumn({ name: 'id' })
 	id: number
-
-	@Column({ name: 'created_by', nullable: true })
-	createdBy: number
-
-	@Column({ name: 'updated_by', nullable: true })
-	updatedBy: number
 
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date
@@ -21,7 +12,4 @@ export class BaseEntity {
 
 	@DeleteDateColumn({ name: 'deleted_at' })
 	deletedAt: Date
-
-	@VersionColumn()
-	version: number
 }

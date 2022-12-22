@@ -2,11 +2,11 @@ import { Column, Entity, Index } from 'typeorm'
 import { BaseEntity } from '../base.entity'
 
 @Entity('medicine_delivery')
-@Index(['clinicId', 'medicineId'])
-@Index(['clinicId', 'deliveryNoteId'])
+@Index(['cPhone', 'medicineId'])
+@Index(['cPhone', 'deliveryNoteId'])
 export default class MedicineDeliveryEntity extends BaseEntity {
-	@Column({ name: 'clinic_id' })
-	clinicId: number
+	@Column({ name: 'c_phone', length: 10 })
+	cPhone: string
 
 	@Column({ name: 'medicine_id' })
 	medicineId: number
@@ -20,15 +20,15 @@ export default class MedicineDeliveryEntity extends BaseEntity {
 	@Column({ name: 'expiry_date' })
 	expiryDate: Date
 
-    @Column({ name: 'cost_price' })
-    public costPrice: number
+	@Column({ name: 'cost_price' })
+	public costPrice: number
 
-    @Column({ name: 'expected_price' })
-    public expectedPrice: number
+	@Column({ name: 'expected_price' })
+	public expectedPrice: number
 
-    @Column({ name: 'actual_price' })
-    public actualPrice: number
+	@Column({ name: 'actual_price' })
+	public actualPrice: number
 
-    @Column()
-    public discount: number
+	@Column()
+	public discount: number
 }

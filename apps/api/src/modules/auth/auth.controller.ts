@@ -18,16 +18,16 @@ export class AuthController {
 	@ApiBearerAuth('access-token')
 	async register(@Body() registerDto: RegisterDto, @Req() request: Request) {
 		const ip = getClientIp(request)
-		const user = await this.authService.register(registerDto)
-		const { accessToken, refreshToken } = this.jwtExtendService.createTokenFromUser(user)
-		return { user, accessToken, refreshToken }
+		const employee = await this.authService.register(registerDto)
+		const { accessToken, refreshToken } = this.jwtExtendService.createTokenFromUser(employee)
+		return { accessToken, refreshToken }
 	}
 
 	@Post('login')
 	async login(@Body() loginDto: LoginDto) {
-		const user = await this.authService.login(loginDto)
-		const { accessToken, refreshToken } = this.jwtExtendService.createTokenFromUser(user)
-		return { user, accessToken, refreshToken }
+		const employee = await this.authService.login(loginDto)
+		const { accessToken, refreshToken } = this.jwtExtendService.createTokenFromUser(employee)
+		return { accessToken, refreshToken }
 	}
 
 	@Post('logout')

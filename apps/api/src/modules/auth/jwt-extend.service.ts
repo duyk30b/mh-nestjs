@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Inject } from '@nestjs/common'
 import { ConfigType } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
-import UserEntity from '../../../../../typeorm/entities/user.entity'
+import UserEntity from '../../../../../typeorm/entities/employee.entity'
 import { IJwtPayload } from '../../common/constants'
 import { JwtConfig } from '../../enviroments'
 import { EError, ETokenError } from '../../exception-filters/exception.enum'
@@ -14,10 +14,10 @@ export class JwtExtendService {
 
 	createAccessToken(user: UserEntity): string {
 		const userPayload: IJwtPayload = {
+			cPhone: user.cPhone,
+			uid: user.id,
 			username: user.username,
 			role: user.role,
-			uid: user.id,
-			cid: user.clinicId,
 		}
 		return this.jwtService.sign(userPayload, {
 			secret: this.jwtConfig.accessKey,

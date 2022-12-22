@@ -8,7 +8,6 @@ import { ValidateAccessTokenMiddleware } from './middlewares/validate-access-tok
 import { AuthModule } from './modules/auth/auth.module'
 import { ClinicModule } from './modules/clinic/clinic.module'
 import { MedicineModule } from './modules/medicine/medicine.module'
-import { UserModule } from './modules/user/user.module'
 
 @Module({
 	imports: [
@@ -25,7 +24,6 @@ import { UserModule } from './modules/user/user.module'
 		}),
 		AuthModule,
 		ClinicModule,
-		UserModule,
 		MedicineModule,
 	],
 })

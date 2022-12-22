@@ -3,8 +3,8 @@ import { BaseEntity } from '../base.entity'
 
 @Entity('provider')
 export default class ProviderEntity extends BaseEntity {
-	@Column({ name: 'organize_id' })
-	organizeId: number
+	@Column({ name: 'c_phone', length: 10 })
+	cPhone: string
 
 	@Column({ name: 'provider_name' })
 	public providerName: string

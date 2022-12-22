@@ -1,11 +1,11 @@
 import { Request } from 'express'
-import { TUserRole } from '../../../../typeorm/entities/user.entity'
+import { TEmployeeRole } from '../../../../typeorm/entities/employee.entity'
 
 export interface IJwtPayload {
 	username: string,
-	role: TUserRole,
+	role: TEmployeeRole,
 	uid: number,
-	cid: number
+	cPhone: string
 }
 
 export interface RequestToken extends Request {
