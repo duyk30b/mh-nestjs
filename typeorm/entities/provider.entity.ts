@@ -1,10 +1,11 @@
-import { Column, Entity } from 'typeorm'
+import { Column, Entity, Index } from 'typeorm'
 import { BaseEntity } from '../base.entity'
 
 @Entity('provider')
+@Index(['clinicId', 'id'], { unique: true })
 export default class ProviderEntity extends BaseEntity {
-	@Column({ name: 'c_phone', length: 10 })
-	cPhone: string
+	@Column({ name: 'clinic_id' })
+	clinicId: number
 
 	@Column({ name: 'provider_name' })
 	public providerName: string

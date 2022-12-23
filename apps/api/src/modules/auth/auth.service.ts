@@ -18,7 +18,7 @@ export class AuthService {
 		const { email, phone, username, password } = registerDto
 		const hashPassword = await bcrypt.hash(password, 5)
 
-		const { employee, clinic } = await this.dataSource.transaction(async (manager) => {
+		const employee = await this.dataSource.transaction(async (manager) => {
 			const findClinic = await manager.findOne(ClinicEntity, { where: [{ email }, { phone }] })
 			if (findClinic) {
 				if (findClinic.email === email && findClinic.phone === phone) {
@@ -39,22 +39,28 @@ export class AuthService {
 			const newClinic = await manager.save(snapClinic)
 
 			const snapEmployee = manager.create(EmployeeEntity, {
-				cPhone: phone,
+				clinicId: newClinic.id,
 				username,
 				password: hashPassword,
 				role: EEmployeeRole.Owner,
 			})
+
 			const newEmployee = await manager.save(snapEmployee)
-			return { clinic: newClinic, employee: newEmployee }
+			newEmployee.clinic = newClinic
+
+			return newEmployee
 		})
+
 		return employee
 	}
 
 	async login(loginDto: LoginDto): Promise<EmployeeEntity> {
-		const employee = await this.dataSource.manager.findOneBy(EmployeeEntity, {
-			cPhone: loginDto.cPhone,
-			username: loginDto.username,
-		})
+		const employee = await this.dataSource.getRepository(EmployeeEntity)
+			.createQueryBuilder('employee')
+			.leftJoinAndSelect('employee.clinic', 'clinic')
+			.where('username = :username', { username: loginDto.username })
+			.andWhere('clinic.phone = :cPhone', { cPhone: loginDto.cPhone })
+			.getOne()
 
 		if (!employee) {
 			throw new HttpException(ELoginError.EmployeeDoesNotExist, HttpStatus.BAD_REQUEST)

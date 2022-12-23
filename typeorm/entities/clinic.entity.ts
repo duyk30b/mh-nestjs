@@ -3,7 +3,6 @@ import { BaseEntity } from '../base.entity'
 
 @Entity('clinic')
 export default class ClinicEntity extends BaseEntity {
-	@Index('clinic_phone')
 	@Column({ unique: true, length: 10, nullable: false })
 	phone: string
 

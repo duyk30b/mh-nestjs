@@ -232,7 +232,8 @@ let JwtExtendService = class JwtExtendService {
     }
     createAccessToken(user) {
         const userPayload = {
-            cPhone: user.cPhone,
+            cPhone: user.clinic.phone,
+            cid: user.clinic.id,
             uid: user.id,
             username: user.username,
             role: user.role,
@@ -392,7 +393,6 @@ const base_entity_1 = __webpack_require__(18);
 let ClinicEntity = class ClinicEntity extends base_entity_1.BaseEntity {
 };
 __decorate([
-    (0, typeorm_1.Index)('clinic_phone'),
     (0, typeorm_1.Column)({ unique: true, length: 10, nullable: false }),
     __metadata("design:type", String)
 ], ClinicEntity.prototype, "phone", void 0);
@@ -471,10 +471,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EEmployeeRole = void 0;
 const typeorm_1 = __webpack_require__(9);
 const base_entity_1 = __webpack_require__(18);
+const clinic_entity_1 = __webpack_require__(17);
 var EEmployeeRole;
 (function (EEmployeeRole) {
     EEmployeeRole["Owner"] = "Owner";
@@ -484,9 +486,14 @@ var EEmployeeRole;
 let UserEntity = class UserEntity extends base_entity_1.BaseEntity {
 };
 __decorate([
-    (0, typeorm_1.Column)({ name: 'c_phone', length: 10 }),
-    __metadata("design:type", String)
-], UserEntity.prototype, "cPhone", void 0);
+    (0, typeorm_1.Column)({ name: 'clinic_id' }),
+    __metadata("design:type", Number)
+], UserEntity.prototype, "clinicId", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(type => clinic_entity_1.default),
+    (0, typeorm_1.JoinColumn)({ name: 'clinic_id', referencedColumnName: 'id' }),
+    __metadata("design:type", typeof (_a = typeof clinic_entity_1.default !== "undefined" && clinic_entity_1.default) === "function" ? _a : Object)
+], UserEntity.prototype, "clinic", void 0);
 __decorate([
     (0, typeorm_1.Column)({ length: 10, nullable: true }),
     __metadata("design:type", String)
@@ -505,7 +512,7 @@ __decorate([
 ], UserEntity.prototype, "role", void 0);
 UserEntity = __decorate([
     (0, typeorm_1.Entity)('employee'),
-    (0, typeorm_1.Index)(['cPhone', 'username'])
+    (0, typeorm_1.Index)(['clinicId', 'username'], { unique: true })
 ], UserEntity);
 exports["default"] = UserEntity;
 
@@ -782,7 +789,7 @@ let AuthService = class AuthService {
     async register(registerDto) {
         const { email, phone, username, password } = registerDto;
         const hashPassword = await bcrypt.hash(password, 5);
-        const { employee, clinic } = await this.dataSource.transaction(async (manager) => {
+        const employee = await this.dataSource.transaction(async (manager) => {
             const findClinic = await manager.findOne(clinic_entity_1.default, { where: [{ email }, { phone }] });
             if (findClinic) {
                 if (findClinic.email === email && findClinic.phone === phone) {
@@ -802,21 +809,24 @@ let AuthService = class AuthService {
             });
             const newClinic = await manager.save(snapClinic);
             const snapEmployee = manager.create(employee_entity_1.default, {
-                cPhone: phone,
+                clinicId: newClinic.id,
                 username,
                 password: hashPassword,
                 role: employee_entity_1.EEmployeeRole.Owner,
             });
             const newEmployee = await manager.save(snapEmployee);
-            return { clinic: newClinic, employee: newEmployee };
+            newEmployee.clinic = newClinic;
+            return newEmployee;
         });
         return employee;
     }
     async login(loginDto) {
-        const employee = await this.dataSource.manager.findOneBy(employee_entity_1.default, {
-            cPhone: loginDto.cPhone,
-            username: loginDto.username,
-        });
+        const employee = await this.dataSource.getRepository(employee_entity_1.default)
+            .createQueryBuilder('employee')
+            .leftJoinAndSelect('employee.clinic', 'clinic')
+            .where('username = :username', { username: loginDto.username })
+            .andWhere('clinic.phone = :cPhone', { cPhone: loginDto.cPhone })
+            .getOne();
         if (!employee) {
             throw new common_1.HttpException(exception_enum_1.ELoginError.EmployeeDoesNotExist, common_1.HttpStatus.BAD_REQUEST);
         }
@@ -1092,9 +1102,9 @@ const base_entity_1 = __webpack_require__(18);
 let MedicineEntity = class MedicineEntity extends base_entity_1.BaseEntity {
 };
 __decorate([
-    (0, typeorm_1.Column)({ name: 'c_phone', length: 10 }),
-    __metadata("design:type", String)
-], MedicineEntity.prototype, "cPhone", void 0);
+    (0, typeorm_1.Column)({ name: 'clinic_id' }),
+    __metadata("design:type", Number)
+], MedicineEntity.prototype, "clinicId", void 0);
 __decorate([
     (0, typeorm_1.Column)({ name: 'brand_name', nullable: true }),
     __metadata("design:type", String)
@@ -1113,7 +1123,7 @@ __decorate([
 ], MedicineEntity.prototype, "image", void 0);
 MedicineEntity = __decorate([
     (0, typeorm_1.Entity)('medicine'),
-    (0, typeorm_1.Index)(['cPhone', 'id'], { unique: true })
+    (0, typeorm_1.Index)(['clinicId', 'id'], { unique: true })
 ], MedicineEntity);
 exports["default"] = MedicineEntity;
 
@@ -1336,15 +1346,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UnknowExceptionFilter = void 0;
 const common_1 = __webpack_require__(1);
 let UnknowExceptionFilter = class UnknowExceptionFilter {
+    constructor(logger = new common_1.Logger('SERVER_ERROR')) {
+        this.logger = logger;
+    }
     catch(exception, host) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse();
         const request = ctx.getRequest();
         const httpStatus = common_1.HttpStatus.INTERNAL_SERVER_ERROR;
+        this.logger.error(exception.stack);
         response.status(httpStatus).json({
             httpStatus,
             message: exception.message,
@@ -1354,7 +1371,8 @@ let UnknowExceptionFilter = class UnknowExceptionFilter {
     }
 };
 UnknowExceptionFilter = __decorate([
-    (0, common_1.Catch)(Error)
+    (0, common_1.Catch)(Error),
+    __metadata("design:paramtypes", [Object])
 ], UnknowExceptionFilter);
 exports.UnknowExceptionFilter = UnknowExceptionFilter;
 

@@ -1,5 +1,6 @@
-import { Column, Entity, Index } from 'typeorm'
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm'
 import { BaseEntity } from '../base.entity'
+import ClinicEntity from './clinic.entity'
 
 export enum EEmployeeRole {
 	Owner = 'Owner',
@@ -10,10 +11,14 @@ export enum EEmployeeRole {
 export type TEmployeeRole = keyof typeof EEmployeeRole
 
 @Entity('employee')
-@Index(['cPhone', 'username'])
+@Index(['clinicId', 'username'], { unique: true })
 export default class UserEntity extends BaseEntity {
-	@Column({ name: 'c_phone', length: 10 })
-	cPhone: string
+	@Column({ name: 'clinic_id' })
+	clinicId: number
+
+	@ManyToOne(type => ClinicEntity)
+	@JoinColumn({ name: 'clinic_id', referencedColumnName: 'id' })
+	clinic: ClinicEntity
 
 	@Column({ length: 10, nullable: true })
 	phone: string

@@ -2,10 +2,10 @@ import { Column, Entity, Index } from 'typeorm'
 import { BaseEntity } from '../base.entity'
 
 @Entity('customer')
-@Index(['cPhone', 'name'])
+@Index(['clinicId', 'name'])
 export default class CustomerEntity extends BaseEntity {
-	@Column({ name: 'c_phone', length: 10 })
-	cPhone: string
+	@Column({ name: 'clinic_id' })
+	clinicId: number
 
 	@Column({ name: 'name' })
 	public name: string

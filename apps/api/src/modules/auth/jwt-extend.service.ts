@@ -14,7 +14,8 @@ export class JwtExtendService {
 
 	createAccessToken(user: UserEntity): string {
 		const userPayload: IJwtPayload = {
-			cPhone: user.cPhone,
+			cPhone: user.clinic.phone,
+			cid: user.clinic.id,
 			uid: user.id,
 			username: user.username,
 			role: user.role,
