@@ -76,8 +76,12 @@ export class AuthService {
 
 	async grantAccessToken(refreshToken: string): Promise<string> {
 		const { uid } = this.jwtExtendService.verifyRefreshToken(refreshToken)
-		const user = await this.dataSource.manager.findOneBy(EmployeeEntity, { id: uid })
-		const accessToken = this.jwtExtendService.createAccessToken(user)
+		const employee = await this.dataSource.getRepository(EmployeeEntity)
+			.createQueryBuilder('employee')
+			.leftJoinAndSelect('employee.clinic', 'clinic')
+			.where('employee.id = :id', { id: uid })
+			.getOne()
+		const accessToken = this.jwtExtendService.createAccessToken(employee)
 		return accessToken
 	}
 }

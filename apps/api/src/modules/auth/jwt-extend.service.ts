@@ -3,7 +3,7 @@ import { ConfigType } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import UserEntity from '../../../../../typeorm/entities/employee.entity'
 import { IJwtPayload } from '../../common/constants'
-import { JwtConfig } from '../../enviroments'
+import { JwtConfig } from '../../environments'
 import { EError, ETokenError } from '../../exception-filters/exception.enum'
 
 export class JwtExtendService {
@@ -48,7 +48,7 @@ export class JwtExtendService {
 			} else if (error.name === 'JsonWebTokenError') {
 				throw new HttpException(ETokenError.Invalid, HttpStatus.UNAUTHORIZED)
 			}
-			throw new HttpException(EError.Unknow, HttpStatus.INTERNAL_SERVER_ERROR)
+			throw new HttpException(EError.Unknown, HttpStatus.INTERNAL_SERVER_ERROR)
 		}
 	}
 
@@ -61,7 +61,7 @@ export class JwtExtendService {
 			} else if (error.name === 'JsonWebTokenError') {
 				throw new HttpException(ETokenError.Invalid, HttpStatus.FORBIDDEN)
 			}
-			throw new HttpException(EError.Unknow, HttpStatus.INTERNAL_SERVER_ERROR)
+			throw new HttpException(EError.Unknown, HttpStatus.INTERNAL_SERVER_ERROR)
 		}
 	}
 }

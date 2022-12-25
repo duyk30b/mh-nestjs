@@ -1,15 +1,16 @@
 export enum EError {
-	Unknow = 'A00.UNKNOW'
+	Unknown = 'A00.UNKNOWN'
 }
 
 export enum EValidateError {
-	Faild = 'V00.VALIDATE_FAIL'
+	Failed = 'V00.VALIDATE_FAILED'
 }
 
 export enum ERegisterError {
-	ExistEmailAndPhone = 'R01.EMAIL_AND_PHONE_EXISTS',
-	ExistEmail = 'R02.EMAIL_EXISTS',
-	ExistPhone = 'R03.PHONE_EXISTS',
+	ExistEmailAndPhone = 'R01.EXIST_EMAIL_AND_PHONE',
+	ExistEmail = 'R02.EXIST_EMAIL',
+	ExistPhone = 'R03.EXIST_PHONE',
+	ExistUsername = 'R04.EXIST_USERNAME'
 }
 
 export enum ELoginError {
@@ -23,5 +24,6 @@ export enum ETokenError {
 }
 
 export enum EEmployeeError {
-	UsernameExists = 'U01.USERNAME_EXISTS'
+	UsernameExists = 'U01.USERNAME_EXISTS',
+	NotExists = 'U02.EMPLOYEE_DOES_NOT_EXIST'
 }

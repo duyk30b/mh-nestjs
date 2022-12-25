@@ -1,5 +1,5 @@
 import { Body, Controller, Param, Post, Req } from '@nestjs/common'
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { getClientIp } from 'request-ip'
 import { LoginDto, RefreshTokenDto, RegisterDto } from './auth.dto'
@@ -15,7 +15,6 @@ export class AuthController {
 	) { }
 
 	@Post('register')
-	@ApiBearerAuth('access-token')
 	async register(@Body() registerDto: RegisterDto, @Req() request: Request) {
 		const ip = getClientIp(request)
 		const employee = await this.authService.register(registerDto)
@@ -47,7 +46,7 @@ export class AuthController {
 
 	@Post('refresh-token')
 	async grantAccessToken(@Body() refreshTokenDto: RefreshTokenDto) {
-		const refreshToken = await this.authService.grantAccessToken(refreshTokenDto.refreshToken)
-		return { refreshToken }
+		const accessToken = await this.authService.grantAccessToken(refreshTokenDto.refreshToken)
+		return { accessToken }
 	}
 }

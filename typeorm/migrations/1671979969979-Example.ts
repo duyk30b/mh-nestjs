@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Example1671789175710 implements MigrationInterface {
-    name = 'Example1671789175710'
+export class Example1671979969979 implements MigrationInterface {
+    name = 'Example1671979969979'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
@@ -21,37 +21,6 @@ export class Example1671789175710 implements MigrationInterface {
             ) ENGINE = InnoDB
         `);
         await queryRunner.query(`
-            CREATE TABLE \`customer\` (
-                \`id\` int NOT NULL AUTO_INCREMENT,
-                \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-                \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-                \`deleted_at\` datetime(6) NULL,
-                \`clinic_id\` int NOT NULL,
-                \`name\` varchar(255) NOT NULL,
-                \`phone\` varchar(255) NOT NULL,
-                \`address\` varchar(255) NOT NULL,
-                INDEX \`IDX_05709b4e05aa8395f1116961de\` (\`clinic_id\`, \`name\`),
-                PRIMARY KEY (\`id\`)
-            ) ENGINE = InnoDB
-        `);
-        await queryRunner.query(`
-            CREATE TABLE \`medicine_available\` (
-                \`id\` int NOT NULL AUTO_INCREMENT,
-                \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-                \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-                \`deleted_at\` datetime(6) NULL,
-                \`clinic_id\` int NOT NULL,
-                \`medicine_id\` int NOT NULL,
-                \`quantity\` int NOT NULL DEFAULT '0',
-                \`expiry_date\` datetime NOT NULL,
-                \`cost_price\` int NOT NULL,
-                \`retail_price\` int NOT NULL,
-                \`wholesale_price\` int NOT NULL,
-                INDEX \`IDX_0209a64334b5e0264836ad3f4b\` (\`clinic_id\`, \`medicine_id\`),
-                PRIMARY KEY (\`id\`)
-            ) ENGINE = InnoDB
-        `);
-        await queryRunner.query(`
             CREATE TABLE \`employee\` (
                 \`id\` int NOT NULL AUTO_INCREMENT,
                 \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
@@ -62,6 +31,7 @@ export class Example1671789175710 implements MigrationInterface {
                 \`username\` varchar(255) NOT NULL,
                 \`password\` varchar(255) NOT NULL,
                 \`role\` enum ('Owner', 'Admin', 'User') NOT NULL DEFAULT 'User',
+                \`full_name\` varchar(255) NULL,
                 UNIQUE INDEX \`IDX_4cd0d85e4f48047027fa2df859\` (\`clinic_id\`, \`username\`),
                 PRIMARY KEY (\`id\`)
             ) ENGINE = InnoDB
@@ -106,45 +76,33 @@ export class Example1671789175710 implements MigrationInterface {
             ) ENGINE = InnoDB
         `);
         await queryRunner.query(`
-            CREATE TABLE \`medicine_delivery_note\` (
+            CREATE TABLE \`medicine_available\` (
                 \`id\` int NOT NULL AUTO_INCREMENT,
                 \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
                 \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
                 \`deleted_at\` datetime(6) NULL,
                 \`clinic_id\` int NOT NULL,
-                \`customer_id\` int NOT NULL,
-                \`user_id\` int NOT NULL,
-                INDEX \`IDX_5ede18bfdfd0ed17f4e175a9b4\` (\`clinic_id\`, \`customer_id\`),
-                INDEX \`IDX_d0c2c4349a6f8d89b56c9702fd\` (\`clinic_id\`, \`user_id\`),
+                \`medicine_id\` int NOT NULL,
+                \`quantity\` int NOT NULL DEFAULT '0',
+                \`expiry_date\` datetime NOT NULL,
+                \`cost_price\` int NOT NULL,
+                \`retail_price\` int NOT NULL,
+                \`wholesale_price\` int NOT NULL,
+                INDEX \`IDX_0209a64334b5e0264836ad3f4b\` (\`clinic_id\`, \`medicine_id\`),
                 PRIMARY KEY (\`id\`)
             ) ENGINE = InnoDB
         `);
         await queryRunner.query(`
-            CREATE TABLE \`provider\` (
+            CREATE TABLE \`customer\` (
                 \`id\` int NOT NULL AUTO_INCREMENT,
                 \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
                 \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
                 \`deleted_at\` datetime(6) NULL,
                 \`clinic_id\` int NOT NULL,
-                \`provider_name\` varchar(255) NOT NULL,
+                \`name\` varchar(255) NOT NULL,
                 \`phone\` varchar(255) NOT NULL,
                 \`address\` varchar(255) NOT NULL,
-                UNIQUE INDEX \`IDX_ccb4d0155cb6fdd114ff1e9342\` (\`clinic_id\`, \`id\`),
-                PRIMARY KEY (\`id\`)
-            ) ENGINE = InnoDB
-        `);
-        await queryRunner.query(`
-            CREATE TABLE \`medicine\` (
-                \`id\` int NOT NULL AUTO_INCREMENT,
-                \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-                \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-                \`deleted_at\` datetime(6) NULL,
-                \`clinic_id\` int NOT NULL,
-                \`brand_name\` varchar(255) NULL,
-                \`chemical_name\` varchar(255) NULL,
-                \`calculation_unit\` varchar(255) NULL,
-                \`image\` varchar(255) NULL,
-                UNIQUE INDEX \`IDX_4c4d408de2803dbd81b39bbb3c\` (\`clinic_id\`, \`id\`),
+                INDEX \`IDX_05709b4e05aa8395f1116961de\` (\`clinic_id\`, \`name\`),
                 PRIMARY KEY (\`id\`)
             ) ENGINE = InnoDB
         `);
@@ -166,6 +124,35 @@ export class Example1671789175710 implements MigrationInterface {
             ) ENGINE = InnoDB
         `);
         await queryRunner.query(`
+            CREATE TABLE \`medicine\` (
+                \`id\` int NOT NULL AUTO_INCREMENT,
+                \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+                \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+                \`deleted_at\` datetime(6) NULL,
+                \`clinic_id\` int NOT NULL,
+                \`brand_name\` varchar(255) NULL,
+                \`chemical_name\` varchar(255) NULL,
+                \`calculation_unit\` varchar(255) NULL,
+                \`image\` varchar(255) NULL,
+                UNIQUE INDEX \`IDX_4c4d408de2803dbd81b39bbb3c\` (\`clinic_id\`, \`id\`),
+                PRIMARY KEY (\`id\`)
+            ) ENGINE = InnoDB
+        `);
+        await queryRunner.query(`
+            CREATE TABLE \`provider\` (
+                \`id\` int NOT NULL AUTO_INCREMENT,
+                \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+                \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+                \`deleted_at\` datetime(6) NULL,
+                \`clinic_id\` int NOT NULL,
+                \`provider_name\` varchar(255) NOT NULL,
+                \`phone\` varchar(255) NOT NULL,
+                \`address\` varchar(255) NOT NULL,
+                UNIQUE INDEX \`IDX_ccb4d0155cb6fdd114ff1e9342\` (\`clinic_id\`, \`id\`),
+                PRIMARY KEY (\`id\`)
+            ) ENGINE = InnoDB
+        `);
+        await queryRunner.query(`
             ALTER TABLE \`employee\`
             ADD CONSTRAINT \`FK_e7db3d1367ea79e7ad88f22d42d\` FOREIGN KEY (\`clinic_id\`) REFERENCES \`clinic\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION
         `);
@@ -174,6 +161,18 @@ export class Example1671789175710 implements MigrationInterface {
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
             ALTER TABLE \`employee\` DROP FOREIGN KEY \`FK_e7db3d1367ea79e7ad88f22d42d\`
+        `);
+        await queryRunner.query(`
+            DROP INDEX \`IDX_ccb4d0155cb6fdd114ff1e9342\` ON \`provider\`
+        `);
+        await queryRunner.query(`
+            DROP TABLE \`provider\`
+        `);
+        await queryRunner.query(`
+            DROP INDEX \`IDX_4c4d408de2803dbd81b39bbb3c\` ON \`medicine\`
+        `);
+        await queryRunner.query(`
+            DROP TABLE \`medicine\`
         `);
         await queryRunner.query(`
             DROP INDEX \`IDX_598a8e7af31ca9e2f8a8c16f88\` ON \`medicine_receipt\`
@@ -185,25 +184,16 @@ export class Example1671789175710 implements MigrationInterface {
             DROP TABLE \`medicine_receipt\`
         `);
         await queryRunner.query(`
-            DROP INDEX \`IDX_4c4d408de2803dbd81b39bbb3c\` ON \`medicine\`
+            DROP INDEX \`IDX_05709b4e05aa8395f1116961de\` ON \`customer\`
         `);
         await queryRunner.query(`
-            DROP TABLE \`medicine\`
+            DROP TABLE \`customer\`
         `);
         await queryRunner.query(`
-            DROP INDEX \`IDX_ccb4d0155cb6fdd114ff1e9342\` ON \`provider\`
+            DROP INDEX \`IDX_0209a64334b5e0264836ad3f4b\` ON \`medicine_available\`
         `);
         await queryRunner.query(`
-            DROP TABLE \`provider\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_d0c2c4349a6f8d89b56c9702fd\` ON \`medicine_delivery_note\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_5ede18bfdfd0ed17f4e175a9b4\` ON \`medicine_delivery_note\`
-        `);
-        await queryRunner.query(`
-            DROP TABLE \`medicine_delivery_note\`
+            DROP TABLE \`medicine_available\`
         `);
         await queryRunner.query(`
             DROP INDEX \`IDX_d0056581598a39f1e72b3cf502\` ON \`medicine_receipt_note\`
@@ -228,18 +218,6 @@ export class Example1671789175710 implements MigrationInterface {
         `);
         await queryRunner.query(`
             DROP TABLE \`employee\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_0209a64334b5e0264836ad3f4b\` ON \`medicine_available\`
-        `);
-        await queryRunner.query(`
-            DROP TABLE \`medicine_available\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_05709b4e05aa8395f1116961de\` ON \`customer\`
-        `);
-        await queryRunner.query(`
-            DROP TABLE \`customer\`
         `);
         await queryRunner.query(`
             DROP INDEX \`IDX_050033b437380ba808c041fe73\` ON \`clinic\`

@@ -7,7 +7,7 @@ import * as requestIp from 'request-ip'
 import { AppModule } from './app.module'
 import { setupSwagger } from './common/swagger'
 import { HttpExceptionFilter } from './exception-filters/http-exception.filter'
-import { UnknowExceptionFilter } from './exception-filters/unknow-exception.filter'
+import { UnknownExceptionFilter } from './exception-filters/unknown-exception.filter'
 import { ValidationException, ValidationExceptionFilter } from './exception-filters/validation-exception.filter'
 import { UserRolesGuard } from './guards/user-roles.guard'
 import { AccessLogInterceptor } from './interceptor/access-log.interceptor'
@@ -22,7 +22,7 @@ async function bootstrap() {
 
 	app.use(helmet())
 	app.use(rateLimit({
-		windowMs: 15 * 60 * 1000, // 15 minutes
+		windowMs: 60 * 1000, // 1 minutes
 		max: 100, // limit each IP to 100 requests per windowMs
 	}))
 	app.enableCors()
@@ -34,7 +34,7 @@ async function bootstrap() {
 		new TimeoutInterceptor()
 	)
 	app.useGlobalFilters(
-		new UnknowExceptionFilter(),
+		new UnknownExceptionFilter(),
 		new HttpExceptionFilter(),
 		new ValidationExceptionFilter()
 	)

@@ -1,3 +1,4 @@
+import { Expose, Exclude } from 'class-transformer'
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm'
 import { BaseEntity } from '../base.entity'
 import ClinicEntity from './clinic.entity'
@@ -12,7 +13,7 @@ export type TEmployeeRole = keyof typeof EEmployeeRole
 
 @Entity('employee')
 @Index(['clinicId', 'username'], { unique: true })
-export default class UserEntity extends BaseEntity {
+export default class EmployeeEntity extends BaseEntity {
 	@Column({ name: 'clinic_id' })
 	clinicId: number
 
@@ -24,11 +25,16 @@ export default class UserEntity extends BaseEntity {
 	phone: string
 
 	@Column()
+	@Expose()
 	username: string
 
 	@Column()
+	@Exclude()
 	password: string
 
 	@Column({ type: 'enum', enum: EEmployeeRole, default: EEmployeeRole.User })
 	role: EEmployeeRole
+
+	@Column({ name: 'full_name', nullable: true })
+	fullName: string
 }
