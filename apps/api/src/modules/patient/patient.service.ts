@@ -1,26 +1,75 @@
-import { Injectable } from '@nestjs/common';
-import { CreatePatientDto } from './dto/create-patient.dto';
-import { UpdatePatientDto } from './dto/update-patient.dto';
+import { HttpStatus, Injectable } from '@nestjs/common'
+import { HttpException } from '@nestjs/common/exceptions'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Equal, Like, Repository } from 'typeorm'
+import PatientEntity from '../../../../../typeorm/entities/patient.entity'
+import { EPatientError } from '../../exception-filters/exception.enum'
+import { CreatePatientDto, UpdatePatientDto } from './patient.dto'
 
 @Injectable()
 export class PatientService {
-  create(createPatientDto: CreatePatientDto) {
-    return 'This action adds a new patient';
-  }
+	constructor(@InjectRepository(PatientEntity) private patientRepository: Repository<PatientEntity>) { }
 
-  findAll() {
-    return `This action returns all patient`;
-  }
+	async findAll(clinicId: number): Promise<PatientEntity[]> {
+		const patientList = await this.patientRepository.find({ where: { clinicId } })
+		return patientList
+	}
 
-  findOne(id: number) {
-    return `This action returns a #${id} patient`;
-  }
+	async create(clinicId: number, createPatientDto: CreatePatientDto): Promise<PatientEntity> {
+		const patient = await this.patientRepository.save({
+			clinicId,
+			...createPatientDto,
+		})
+		return patient
+	}
 
-  update(id: number, updatePatientDto: UpdatePatientDto) {
-    return `This action updates a #${id} patient`;
-  }
+	async findOne(clinicId: number, id: number) {
+		const patient = await this.patientRepository.findOneBy({ clinicId, id })
+		return patient
+	}
 
-  remove(id: number) {
-    return `This action removes a #${id} patient`;
-  }
+	async findByPhone(clinicId: number, phone: string): Promise<PatientEntity[]> {
+		const patientList = await this.patientRepository.find({
+			where: {
+				clinicId: Equal(clinicId),
+				phone: Like(`${phone}%`),
+			},
+			skip: 0,
+			take: 10,
+		})
+		return patientList
+	}
+	async findByFullName(clinicId: number, fullName: string): Promise<PatientEntity[]> {
+		const patientList = await this.patientRepository.find({
+			where: {
+				clinicId: Equal(clinicId),
+				fullName: Like(`${fullName}%`),
+			},
+			skip: 0,
+			take: 10,
+		})
+		return patientList
+	}
+
+	async update(clinicId: number, id: number, updatePatientDto: UpdatePatientDto) {
+		const findPatient = await this.patientRepository.findOneBy({ clinicId, id })
+		if (!findPatient) {
+			throw new HttpException(EPatientError.NotExists, HttpStatus.BAD_REQUEST)
+		}
+		return await this.patientRepository.update({ clinicId, id }, updatePatientDto)
+	}
+
+	async remove(clinicId: number, id: number) {
+		return await this.patientRepository.softDelete({
+			clinicId,
+			id,
+		})
+	}
+
+	async restore(clinicId: number, employeeId: number) {
+		return await this.patientRepository.restore({
+			clinicId,
+			id: employeeId,
+		})
+	}
 }

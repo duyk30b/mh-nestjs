@@ -13,7 +13,9 @@
     "editorInlayHint.foreground": "#ffffffcc"
   },
   "cSpell.words": [
+    "datetime",
     "nestjs",
+    "tinyint",
     "typeorm"
   ]
 }

@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common'
 import { UseInterceptors } from '@nestjs/common/decorators'
 import { ClassSerializerInterceptor } from '@nestjs/common/serializer'
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger'
 import { RequestToken } from '../../common/constants'
 import { CreateEmployeeDto, UpdateEmployeeDto } from './employee.dto'
 import { EmployeeService } from './employee.service'
@@ -26,12 +26,14 @@ export class EmployeeController {
 	}
 
 	@Get(':id')
+	@ApiParam({ name: 'id', example: 1 })
 	findOne(@Param('id') id: string, @Req() request: RequestToken) {
 		const clinicId = request.tokenPayload.cid
 		return this.employeeService.findOne(clinicId, +id)
 	}
 
 	@Patch('update/:id')
+	@ApiParam({ name: 'id', example: 1 })
 	async update(@Param('id') id: string, @Req() request: RequestToken, @Body() updateEmployeeDto: UpdateEmployeeDto) {
 		const clinicId = request.tokenPayload.cid
 		await this.employeeService.update(clinicId, +id, updateEmployeeDto)
@@ -39,6 +41,7 @@ export class EmployeeController {
 	}
 
 	@Delete('remove/:id')
+	@ApiParam({ name: 'id', example: 1 })
 	async remove(@Param('id') id: string, @Req() request: RequestToken) {
 		const clinicId = request.tokenPayload.cid
 		await this.employeeService.remove(clinicId, +id)
@@ -46,6 +49,7 @@ export class EmployeeController {
 	}
 
 	@Patch('restore/:id')
+	@ApiParam({ name: 'id', example: 1 })
 	async restore(@Param('id') id: string, @Req() request: RequestToken) {
 		const clinicId = request.tokenPayload.cid
 		await this.employeeService.restore(clinicId, +id)

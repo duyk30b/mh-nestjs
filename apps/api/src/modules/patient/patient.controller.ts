@@ -1,34 +1,66 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { PatientService } from './patient.service';
-import { CreatePatientDto } from './dto/create-patient.dto';
-import { UpdatePatientDto } from './dto/update-patient.dto';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseInterceptors } from '@nestjs/common'
+import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger'
+import { RequestToken } from '../../common/constants'
+import { CreatePatientDto, UpdatePatientDto } from './patient.dto'
+import { PatientService } from './patient.service'
 
+@ApiTags('Patient')
+@ApiBearerAuth('access-token')
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('patient')
 export class PatientController {
-  constructor(private readonly patientService: PatientService) {}
+	constructor(private readonly patientService: PatientService) { }
 
-  @Post()
-  create(@Body() createPatientDto: CreatePatientDto) {
-    return this.patientService.create(createPatientDto);
-  }
+	@Get()
+	findAll(@Req() request: RequestToken) {
+		const clinicId = request.tokenPayload.cid
+		return this.patientService.findAll(clinicId)
+	}
 
-  @Get()
-  findAll() {
-    return this.patientService.findAll();
-  }
+	@Get('search')
+	@ApiQuery({ name: 'searchText', example: '0986123456' })
+	search(@Query('searchText') searchText: string, @Req() request: RequestToken) {
+		const clinicId = request.tokenPayload.cid
+		if (/^\d+$/.test(searchText)) {
+			return this.patientService.findByPhone(clinicId, searchText)
+		}
+		return this.patientService.findByFullName(clinicId, searchText)
+	}
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.patientService.findOne(+id);
-  }
+	@Post()
+	create(@Body() createPatientDto: CreatePatientDto, @Req() request: RequestToken) {
+		const clinicId = request.tokenPayload.cid
+		return this.patientService.create(clinicId, createPatientDto)
+	}
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePatientDto: UpdatePatientDto) {
-    return this.patientService.update(+id, updatePatientDto);
-  }
+	@Get(':id')
+	@ApiParam({ name: 'id', example: 1 })
+	findOne(@Param('id') id: string, @Req() request: RequestToken) {
+		const clinicId = request.tokenPayload.cid
+		return this.patientService.findOne(clinicId, +id)
+	}
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.patientService.remove(+id);
-  }
+	@Patch('update/:id')
+	@ApiParam({ name: 'id', example: 1 })
+	async update(@Param('id') id: string, @Body() updatePatientDto: UpdatePatientDto, @Req() request: RequestToken) {
+		const clinicId = request.tokenPayload.cid
+		await this.patientService.update(clinicId, +id, updatePatientDto)
+		return { message: 'success' }
+	}
+
+	@Delete('remove/:id')
+	@ApiParam({ name: 'id', example: 1 })
+	async remove(@Param('id') id: string, @Req() request: RequestToken) {
+		const clinicId = request.tokenPayload.cid
+		await this.patientService.remove(clinicId, +id)
+		return { message: 'success' }
+	}
+
+	@Patch('restore/:id')
+	@ApiParam({ name: 'id', example: 1 })
+	async restore(@Param('id') id: string, @Req() request: RequestToken) {
+		const clinicId = request.tokenPayload.cid
+		await this.patientService.restore(clinicId, +id)
+		return { message: 'success' }
+	}
 }

@@ -27,3 +27,7 @@ export enum EEmployeeError {
 	UsernameExists = 'U01.USERNAME_EXISTS',
 	NotExists = 'U02.EMPLOYEE_DOES_NOT_EXIST'
 }
+
+export enum EPatientError {
+	NotExists = 'P01.PATIENT_DOES_NOT_EXIST'
+}
