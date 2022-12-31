@@ -11,6 +11,7 @@ RUN npm install --production --silent
 COPY [".env", ".env.staging", "tsconfig.json", "./"]
 COPY ./dist ./dist
 COPY ./typeorm ./typeorm
+COPY ./utils ./utils
 
 FROM node:16.18.1-alpine3.15 AS production
 WORKDIR /app
@@ -19,3 +20,4 @@ RUN npm install --production --silent
 COPY [".env", ".env.production", "tsconfig.json", "./"]
 COPY ./dist ./dist
 COPY ./typeorm ./typeorm
+COPY ./utils ./utils

@@ -444,8 +444,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.BaseEntity = void 0;
+exports.BaseEntity = exports.EGender = void 0;
 const typeorm_1 = __webpack_require__(9);
+var EGender;
+(function (EGender) {
+    EGender["Male"] = "Male";
+    EGender["Female"] = "Female";
+})(EGender = exports.EGender || (exports.EGender = {}));
 class BaseEntity {
 }
 __decorate([
@@ -481,7 +486,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
+var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EEmployeeRole = void 0;
 const class_transformer_1 = __webpack_require__(20);
@@ -511,7 +516,6 @@ __decorate([
 ], EmployeeEntity.prototype, "phone", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    (0, class_transformer_1.Expose)(),
     __metadata("design:type", String)
 ], EmployeeEntity.prototype, "username", void 0);
 __decorate([
@@ -527,6 +531,14 @@ __decorate([
     (0, typeorm_1.Column)({ name: 'full_name', nullable: true }),
     __metadata("design:type", String)
 ], EmployeeEntity.prototype, "fullName", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", typeof (_b = typeof Date !== "undefined" && Date) === "function" ? _b : Object)
+], EmployeeEntity.prototype, "birthday", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'enum', enum: base_entity_1.EGender, nullable: true }),
+    __metadata("design:type", typeof (_c = typeof base_entity_1.EGender !== "undefined" && base_entity_1.EGender) === "function" ? _c : Object)
+], EmployeeEntity.prototype, "gender", void 0);
 EmployeeEntity = __decorate([
     (0, typeorm_1.Entity)('employee'),
     (0, typeorm_1.Index)(['clinicId', 'username'], { unique: true })
@@ -1654,16 +1666,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
+var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.EGender = void 0;
 const typeorm_1 = __webpack_require__(9);
 const base_entity_1 = __webpack_require__(18);
-var EGender;
-(function (EGender) {
-    EGender["Male"] = "Male";
-    EGender["Female"] = "Female";
-})(EGender = exports.EGender || (exports.EGender = {}));
 let PatientEntity = class PatientEntity extends base_entity_1.BaseEntity {
 };
 __decorate([
@@ -1683,8 +1689,8 @@ __decorate([
     __metadata("design:type", typeof (_a = typeof Date !== "undefined" && Date) === "function" ? _a : Object)
 ], PatientEntity.prototype, "birthday", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'enum', enum: EGender, nullable: true }),
-    __metadata("design:type", String)
+    (0, typeorm_1.Column)({ type: 'enum', enum: base_entity_1.EGender, nullable: true }),
+    __metadata("design:type", typeof (_b = typeof base_entity_1.EGender !== "undefined" && base_entity_1.EGender) === "function" ? _b : Object)
 ], PatientEntity.prototype, "gender", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
@@ -1852,7 +1858,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdatePatientDto = exports.CreatePatientDto = void 0;
 const swagger_1 = __webpack_require__(22);
 const class_validator_1 = __webpack_require__(25);
-const patient_entity_1 = __webpack_require__(49);
+const base_entity_1 = __webpack_require__(18);
 const class_validator_custom_1 = __webpack_require__(26);
 class CreatePatientDto {
 }
@@ -1867,8 +1873,8 @@ __decorate([
     __metadata("design:type", String)
 ], CreatePatientDto.prototype, "phone", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ example: patient_entity_1.EGender.Female }),
-    __metadata("design:type", typeof (_a = typeof patient_entity_1.EGender !== "undefined" && patient_entity_1.EGender) === "function" ? _a : Object)
+    (0, swagger_1.ApiPropertyOptional)({ example: base_entity_1.EGender.Female }),
+    __metadata("design:type", typeof (_a = typeof base_entity_1.EGender !== "undefined" && base_entity_1.EGender) === "function" ? _a : Object)
 ], CreatePatientDto.prototype, "gender", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: 'Thành phố Hà Nội -- Quận Long Biên -- Phường Thạch Bàn -- số 8 - tòa nhà Đảo Cầu Vồng' }),

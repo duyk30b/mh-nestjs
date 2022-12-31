@@ -3,12 +3,12 @@ import { IsDefined, Length, MinLength, Validate } from 'class-validator'
 import { IsGmail, IsPhone } from '../../common/class-validator.custom'
 
 export class RegisterDto {
-	@ApiProperty({ example: 'example-clinic@gmail.com' })
+	@ApiProperty({ example: 'example-2@gmail.com' })
 	@IsDefined()
 	@Validate(IsGmail)
 	email: string
 
-	@ApiProperty({ example: '0986021190' })
+	@ApiProperty({ example: '0376899866' })
 	@IsDefined()
 	@Validate(IsPhone)
 	phone: string

@@ -1,5 +1,10 @@
 import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
+export enum EGender {
+	Male = 'Male',
+	Female = 'Female',
+}
+
 export class BaseEntity {
 	@PrimaryGeneratedColumn({ name: 'id' })
 	id: number

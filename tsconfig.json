@@ -18,18 +18,13 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@libs/utils": [
-        "libs/utils/src"
-      ],
-      "@libs/utils/*": [
-        "libs/utils/src/*"
-      ]
     }
   },
   "include": [
     "apps/**/*.ts",
     "libs/**/*.ts",
     "typeorm/**/*.ts",
+    "utils/**/*.ts",
     ".eslintrc.js"
   ],
   "exclude": [

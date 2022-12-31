@@ -1,11 +1,5 @@
-import { Exclude, Expose } from 'class-transformer'
 import { Column, Entity, Index } from 'typeorm'
-import { BaseEntity } from '../base.entity'
-
-export enum EGender {
-	Male = 'Male',
-	Female = 'Female',
-}
+import { BaseEntity, EGender } from '../base.entity'
 
 @Entity('patient')
 @Index(['clinicId', 'fullName'])

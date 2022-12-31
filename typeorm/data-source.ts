@@ -1,11 +1,12 @@
 import * as dotenv from 'dotenv'
 import * as path from 'path'
 import { DataSource, DataSourceOptions } from 'typeorm'
+import { SeederOptions } from 'typeorm-extension'
 
 dotenv.config({ path: path.resolve(__dirname, `../.env.${process.env.NODE_ENV || 'local'}`) })
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
 
-export const dataSource = new DataSource({
+const options: DataSourceOptions & SeederOptions = {
 	type: 'mariadb',
 	host: process.env.MARIADB_HOST,
 	port: Number(process.env.MARIADB_PORT),
@@ -16,4 +17,9 @@ export const dataSource = new DataSource({
 	migrations: [path.resolve(__dirname, './migrations/*.{ts,js}')],
 	migrationsTableName: 'typeorm_migration',
 	migrationsTransactionMode: 'each',
-} as DataSourceOptions)
+	seeds: ['typeorm/seeds/**/*{.ts,.js}'],
+	factories: ['typeorm/factories/**/*{.ts,.js}'],
+	logging: true,
+}
+
+export const dataSource = new DataSource(options)

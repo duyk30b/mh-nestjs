@@ -1,6 +1,6 @@
 import { ApiPropertyOptional, PartialType } from '@nestjs/swagger'
 import { IsDefined, Validate } from 'class-validator'
-import { EGender } from '../../../../../typeorm/entities/patient.entity'
+import { EGender } from '../../../../../typeorm/base.entity'
 import { IsPhone } from '../../common/class-validator.custom'
 
 export class CreatePatientDto {

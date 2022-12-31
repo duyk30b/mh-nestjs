@@ -1,4 +1,3 @@
-
 const _CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 
 const generateCharset = (privateKey = 'Abc123', charset = _CHARSET): string => {
@@ -28,7 +27,7 @@ export const randomString = (length = 10, characters = _CHARSET): string => {
 	return result
 }
 
-export const encript = (rootString: string, privateKey?: string): string => {
+export const encrypt = (rootString: string, privateKey?: string): string => {
 	const hash = generateCharset(privateKey)
 	let result = ''
 	for (let i = 0; i < rootString.length; i += 1) {
@@ -42,7 +41,7 @@ export const encript = (rootString: string, privateKey?: string): string => {
 	return result
 }
 
-export const decript = (cipherText: string, privateKey?: string): string => {
+export const decrypt = (cipherText: string, privateKey?: string): string => {
 	const hash = generateCharset(privateKey)
 	let result = ''
 	for (let i = 0; i < cipherText.length; i += 1) {

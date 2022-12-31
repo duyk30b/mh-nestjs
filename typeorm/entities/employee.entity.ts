@@ -1,6 +1,6 @@
-import { Expose, Exclude } from 'class-transformer'
+import { Exclude } from 'class-transformer'
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm'
-import { BaseEntity } from '../base.entity'
+import { BaseEntity, EGender } from '../base.entity'
 import ClinicEntity from './clinic.entity'
 
 export enum EEmployeeRole {
@@ -25,7 +25,6 @@ export default class EmployeeEntity extends BaseEntity {
 	phone: string
 
 	@Column()
-	@Expose()
 	username: string
 
 	@Column()
@@ -37,4 +36,10 @@ export default class EmployeeEntity extends BaseEntity {
 
 	@Column({ name: 'full_name', nullable: true })
 	fullName: string
+
+	@Column({ nullable: true })
+	birthday: Date
+
+	@Column({ type: 'enum', enum: EGender, nullable: true })
+	gender: EGender
 }

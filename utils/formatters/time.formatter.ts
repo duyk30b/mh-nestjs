@@ -1,4 +1,6 @@
-export const timeToText = (time: Date, pattern = 'hh:mm:ss DD/MM/YY', offset = 7): string => {
+export const timeToText = (time: Date | string | number, pattern = 'hh:mm:ss DD/MM/YY', offset = 7): string => {
+	if (typeof time !== 'object') time = new Date(time)
+
 	const date = new Date(time.getTime() + offset * 60 * 60 * 1000)
 	const rules = {
 		YYYY: `${date.getUTCFullYear()}`,

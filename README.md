@@ -1,8 +1,5 @@
 ## I. Run project in local
-- Required: Intall **Docker**
-
-1. Run Database: `docker compose up mariadb -d`
-2. Install Nodejs
+1. Install Nodejs
 - Install nvm on Windows: https://github.com/coreybutler/nvm-windows/releases
 - Install nvm on Ubuntu: 
 ```
@@ -16,14 +13,20 @@ nvm install 16.18.1
 nvm use 16.18.1
 npm install
 ```
-3. Run migration for create database entity: `npm run migration:run`
-4. Run NestJS: `npm run start:local`
-5. Now, access: http://localhost:7100/document
-6. When change entity, create migration: `npm run migration:generate` or `npm run migration:create`
-7. When build: `npm run build`
+
+2. Create database on **Docker**
+- Create MariaDB: `docker compose up mariadb -d`
+- Run Migration for create database entity: `npm run migration:run`
+- Run Seed for create fake database: `npm run seed:run`
+- When change entity, create migration: `npm run migration:generate` (recommend) or `npm run migration:create`
+- When revert migration: `npm run migration:revert`
+
+3. Run project NestJS: `npm run start:local`
+4. Now, access: http://localhost:7100/document
+5. When build: `npm run build`
 
 ## I. Run project in Docker
-- Required: Intall **Docker**
+- Required: Install **Docker**
 
 1. At docker in local, run `docker compose --env-file .env.development up -d --build`
 Now, access: http://localhost:7200/document
@@ -62,4 +65,4 @@ git reset --hard origin/master
 - Create new module: `nest g resource my-module`
 
 4. Linux
-- List venv: `printenv`
+- List env: `printenv`
