@@ -1,4 +1,5 @@
 export const timeToText = (time: Date | string | number, pattern = 'hh:mm:ss DD/MM/YY', offset = 7): string => {
+	if (time == null || time === '') return ''
 	if (typeof time !== 'object') time = new Date(time)
 
 	const date = new Date(time.getTime() + offset * 60 * 60 * 1000)

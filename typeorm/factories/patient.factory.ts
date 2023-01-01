@@ -4,12 +4,15 @@ import { randomDate, randomFullName, randomItemsInArray, randomNumber, randomPho
 import PatientEntity from '../entities/patient.entity'
 
 export default setSeederFactory(PatientEntity, (faker) => {
+	const gender = randomItemsInArray(['Male', 'Female'])
+	const fullName = randomFullName(gender)
+
 	const patient = new PatientEntity()
 	patient.clinicId = randomNumber(1, 3)
-	patient.fullName = randomFullName()
+	patient.fullName = fullName
 	patient.phone = randomPhoneNumber()
 	patient.birthday = randomDate('1965-03-28', '2020-12-29')
-	patient.gender = randomItemsInArray(['Male', 'Female'])
+	patient.gender = gender
 	patient.address = AddressData.getRandomAddress()
 
 	return patient

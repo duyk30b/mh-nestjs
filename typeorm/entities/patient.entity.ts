@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer'
 import { Column, Entity, Index } from 'typeorm'
 import { BaseEntity, EGender } from '../base.entity'
 
@@ -6,6 +7,7 @@ import { BaseEntity, EGender } from '../base.entity'
 @Index(['clinicId', 'phone'])
 export default class PatientEntity extends BaseEntity {
 	@Column({ name: 'clinic_id' })
+	@Exclude()
 	clinicId: number
 
 	@Column({ name: 'full_name' })

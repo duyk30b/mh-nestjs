@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer'
 import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
 export enum EGender {
@@ -16,5 +17,6 @@ export class BaseEntity {
 	updatedAt: Date
 
 	@DeleteDateColumn({ name: 'deleted_at' })
+	@Exclude()
 	deletedAt: Date
 }

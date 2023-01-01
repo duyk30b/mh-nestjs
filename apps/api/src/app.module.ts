@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
 import { ConfigModule, ConfigType } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { DataSource } from 'typeorm'
@@ -8,8 +8,9 @@ import { ValidateAccessTokenMiddleware } from './middlewares/validate-access-tok
 import { AuthModule } from './modules/auth/auth.module'
 import { ClinicModule } from './modules/clinic/clinic.module'
 import { EmployeeModule } from './modules/employee/employee.module'
+import { HealthModule } from './modules/health/health.module'
 import { MedicineModule } from './modules/medicine/medicine.module'
-import { PatientModule } from './modules/patient/patient.module';
+import { PatientModule } from './modules/patient/patient.module'
 
 @Module({
 	imports: [
@@ -24,11 +25,12 @@ import { PatientModule } from './modules/patient/patient.module';
 			// inject: [ConfigService],
 			// useFactory: (configService: ConfigService) => configService.get('mysql'),
 		}),
+		HealthModule,
 		AuthModule,
-		ClinicModule,
-		MedicineModule,
 		EmployeeModule,
 		PatientModule,
+		ClinicModule,
+		MedicineModule,
 	],
 })
 export class AppModule implements NestModule {
@@ -37,7 +39,11 @@ export class AppModule implements NestModule {
 		consumer.apply(LoggerMiddleware).forRoutes('*')
 
 		consumer.apply(ValidateAccessTokenMiddleware)
-			.exclude('auth/(.*)', '/')
+			.exclude(
+				'auth/(.*)',
+				'/',
+				{ path: 'health', method: RequestMethod.GET }
+			)
 			.forRoutes('*')
 	}
 }

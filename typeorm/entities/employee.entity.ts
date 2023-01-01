@@ -15,6 +15,7 @@ export type TEmployeeRole = keyof typeof EEmployeeRole
 @Index(['clinicId', 'username'], { unique: true })
 export default class EmployeeEntity extends BaseEntity {
 	@Column({ name: 'clinic_id' })
+	@Exclude()
 	clinicId: number
 
 	@ManyToOne(type => ClinicEntity)
