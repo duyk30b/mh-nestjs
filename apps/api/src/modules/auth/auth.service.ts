@@ -40,13 +40,12 @@ export class AuthService {
 
 			const snapEmployee = manager.create(EmployeeEntity, {
 				clinicId: newClinic.id,
+				clinic: newClinic,
 				username,
 				password: hashPassword,
 				role: EEmployeeRole.Owner,
 			})
-
 			const newEmployee = await manager.save(snapEmployee)
-			newEmployee.clinic = newClinic
 
 			return newEmployee
 		})
@@ -55,32 +54,29 @@ export class AuthService {
 	}
 
 	async login(loginDto: LoginDto): Promise<EmployeeEntity> {
-		const employee = await this.dataSource.getRepository(EmployeeEntity)
-			.createQueryBuilder('employee')
-			.leftJoinAndSelect('employee.clinic', 'clinic')
-			.where('username = :username', { username: loginDto.username })
-			.andWhere('clinic.phone = :cPhone', { cPhone: loginDto.cPhone })
-			.getOne()
-
-		if (!employee) {
-			throw new HttpException(ELoginError.EmployeeDoesNotExist, HttpStatus.BAD_REQUEST)
-		}
+		const employee = await this.dataSource.manager.findOne(EmployeeEntity, {
+			relations: { clinic: true },
+			where: {
+				username: loginDto.username,
+				clinic: { phone: loginDto.cPhone },
+			},
+		})
+		if (!employee) throw new HttpException(ELoginError.EmployeeDoesNotExist, HttpStatus.BAD_REQUEST)
 
 		const checkPassword = await bcrypt.compare(loginDto.password, employee.password)
-		if (!checkPassword) {
-			throw new HttpException(ELoginError.WrongPassword, HttpStatus.BAD_GATEWAY)
-		}
+		if (!checkPassword) throw new HttpException(ELoginError.WrongPassword, HttpStatus.BAD_GATEWAY)
 
 		return employee
 	}
 
 	async grantAccessToken(refreshToken: string): Promise<string> {
 		const { uid } = this.jwtExtendService.verifyRefreshToken(refreshToken)
-		const employee = await this.dataSource.getRepository(EmployeeEntity)
-			.createQueryBuilder('employee')
-			.leftJoinAndSelect('employee.clinic', 'clinic')
-			.where('employee.id = :id', { id: uid })
-			.getOne()
+
+		const employee = await this.dataSource.getRepository(EmployeeEntity).findOne({
+			relations: { clinic: true },
+			where: { id: uid },
+		})
+
 		const accessToken = this.jwtExtendService.createAccessToken(employee)
 		return accessToken
 	}

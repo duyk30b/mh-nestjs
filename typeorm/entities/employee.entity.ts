@@ -38,7 +38,7 @@ export default class EmployeeEntity extends BaseEntity {
 	@Column({ name: 'full_name', nullable: true })
 	fullName: string
 
-	@Column({ nullable: true })
+	@Column({ type: 'date', nullable: true })
 	birthday: Date
 
 	@Column({ type: 'enum', enum: EGender, nullable: true })

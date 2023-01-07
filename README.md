@@ -17,11 +17,11 @@ npm install
 2. Create database on **Docker**
 - Create MariaDB: `docker compose up mariadb -d`
 - Run Migration for create database entity: `npm run migration:run`
-- Run Seed for create fake database: `npm run seed:run`
+- Run Seed for create fake database: `npm run fake:data`
 - When change entity, create migration: `npm run migration:generate` (recommend) or `npm run migration:create`
 - When revert migration: `npm run migration:revert`
 
-3. Run project NestJS: `npm run start:local`
+3. Run project NestJS: `npm run dev`
 4. Now, access: http://localhost:7100/document
 5. When build: `npm run build`
 

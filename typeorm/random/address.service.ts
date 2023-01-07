@@ -1,6 +1,6 @@
 import * as fs from 'fs'
-import { randomItemsInArray } from '../helpers/random.helper'
-import { HttpsGet } from '../helpers/request.helper'
+import { randomFullName, randomItemsInArray, randomNumber } from '../../utils/helpers/random.helper'
+import { HttpsGet } from '../../utils/helpers/request.helper'
 
 type Ward = {
 	name: string
@@ -53,7 +53,12 @@ class Address {
 		const province: Province = randomItemsInArray(this.provinces)
 		const district: District = randomItemsInArray(province.districts)
 		const ward: Ward = randomItemsInArray(district.wards)
-		return `${province?.name} -- ${district?.name} -- ${ward?.name}`
+
+		const line = `${randomNumber(10, 999)}/${randomNumber(10, 999)} Đường ${randomFullName('Male', false)}`
+		const hamlet = `Thôn ${randomFullName('Male', false)}`
+		const street = randomItemsInArray([line, hamlet])
+
+		return `${province?.name} -- ${district?.name} -- ${ward?.name} -- ${street}`
 	}
 }
 

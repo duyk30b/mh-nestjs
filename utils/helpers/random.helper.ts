@@ -2,8 +2,9 @@ import { convertViToEn } from './string.helper'
 
 export const randomItemsInArray = (items: any[]) => items[Math.floor(Math.random() * items.length)]
 
-export const randomNumber = (min: number, max: number) => {
-	return Math.floor(Math.random() * (max - min + 1)) + min
+export const randomNumber = (min: number, max: number, step = 1) => {
+	const count = (max - min) / step + 1
+	return Math.floor(Math.random() * count) * step + min
 }
 
 export const randomPhoneNumber = (): string => {
@@ -12,7 +13,7 @@ export const randomPhoneNumber = (): string => {
 	return headNumber + tailNumber
 }
 
-export const randomFullName = (gender?: 'Male' | 'Female'): string => {
+export const randomFullName = (gender?: 'Male' | 'Female', hasMiddle = true): string => {
 	const surname = randomItemsInArray(['Nguyễn', 'Lê', 'Phạm', 'Vũ', 'Phan', 'Trương', 'Trần', 'Bùi', 'Đặng', 'Đỗ', 'Ngô', 'Dương'])
 	let middleName = '',
 		lastName = ''
@@ -20,10 +21,10 @@ export const randomFullName = (gender?: 'Male' | 'Female'): string => {
 		middleName = randomItemsInArray(['Hồng', 'Lệ', 'Thị', 'Thu', 'Thanh', 'Tuyết', 'Thảo', 'Trúc', 'Quỳnh'])
 		lastName = randomItemsInArray(['Bích', 'Chi', 'Diệp', 'Diệu', 'Duyên', 'Hoa', 'Huyền', 'Hương', 'Linh', 'Mai', 'Nga', 'Ngọc', 'Thảo', 'Trang', 'Quỳnh'])
 	} else {
-		middleName = randomItemsInArray(['Anh', 'Huy', 'Mạnh', 'Minh', 'Nam', 'Ngọc', 'Thái', 'Thanh', 'Văn', 'Việt'])
+		middleName = randomItemsInArray(['Anh', 'Đình', 'Huy', 'Mạnh', 'Minh', 'Nam', 'Ngọc', 'Nhật', 'Thái', 'Thanh', 'Văn', 'Việt'])
 		lastName = randomItemsInArray(['Đạt', 'Khánh', 'Khôi', 'Kiên', 'Lâm', 'Huy', 'Hùng', 'Hoàng', 'Minh', 'Nghĩa', 'Sơn', 'Tùng', 'Trung', 'Trường', 'Thắng', 'Quang', 'Quân'])
-		return `${surname} ${middleName} ${lastName}`
 	}
+	if (!hasMiddle) return `${surname} ${lastName}`
 	return `${surname} ${middleName} ${lastName}`
 }
 
@@ -44,4 +45,10 @@ export const randomUsername = (fullName?: string, birthday?: Date): string => {
 	const text = nameEng.split(' ').slice(-2).join('')
 	const number = birthday.getFullYear().toString().slice(-2)
 	return text + number
+}
+
+export const randomBloodPressure = () => {
+	const diastolic = randomNumber(60, 120)
+	const systolic = diastolic + randomNumber(25, 70)
+	return `${systolic}/${diastolic}`
 }

@@ -16,7 +16,7 @@ export default class PatientEntity extends BaseEntity {
 	@Column({ length: 10, nullable: true })
 	phone: string
 
-	@Column({ nullable: true })
+	@Column({ type: 'date', nullable: true })
 	birthday: Date
 
 	@Column({ type: 'enum', enum: EGender, nullable: true })
@@ -24,4 +24,7 @@ export default class PatientEntity extends BaseEntity {
 
 	@Column({ nullable: true })
 	address: string
+
+	@Column({ name: 'health_history', type: 'text', nullable: true })
+	healthHistory: string // Tiền sử bệnh
 }

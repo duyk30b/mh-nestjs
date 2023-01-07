@@ -26,7 +26,7 @@
     "typeorm/**/*.ts",
     "utils/**/*.ts",
     ".eslintrc.js"
-  ],
+, "typeorm/fake-data"  ],
   "exclude": [
     "dist/"
   ]

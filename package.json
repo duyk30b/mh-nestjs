@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "nest start",
-    "start:local": "nest start --debug --watch",
+    "dev": "nest start --debug --watch",
     "start:development": "nest start --debug --watch",
     "start:production": "node dist/apps/api/main",
     "start:staging": "node dist/apps/api/main",
@@ -23,10 +23,11 @@
     "migration:create": "typeorm-ts-node-commonjs migration:create ./typeorm/migrations/Example",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d ./typeorm/data-source.ts",
     "migration:revert": "typeorm-ts-node-commonjs migration:revert -d ./typeorm/data-source.ts",
-    "seeder:run": "ts-node typeorm/seeder.ts",
+    "fake:data": "ts-node typeorm/fake-data/start.ts",
     "stop:local": "taskkill /f /im node.exe"
   },
   "dependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@nestjs/axios": "^1.0.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
@@ -50,7 +51,6 @@
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.0",
     "typeorm": "^0.3.10",
-    "typeorm-extension": "^2.4.1",
     "typescript": "^4.9.3"
   },
   "devDependencies": {

@@ -19,10 +19,13 @@ export class HealthController {
 	@Get()
 	@HealthCheck()
 	check() {
+		const pathStorage = process.platform === 'win32' ? 'C:\\' : '/'
+		const thresholdPercent = process.platform === 'win32' ? 0.9 : 0.5
+
 		return this.health.check([
 			() => this.http.pingCheck('nestjs-docs', 'https://medihome.vn/document'),
 			() => this.db.pingCheck('database'),
-			() => this.disk.checkStorage('storage', { path: '/', thresholdPercent: 0.5 }),
+			() => this.disk.checkStorage('storage', { path: pathStorage, thresholdPercent }),
 			() => this.memory.checkHeap('memory_heap', 150 * 1024 * 1024),
 			() => this.memory.checkRSS('memory_rss', 150 * 1024 * 1024),
 		])
