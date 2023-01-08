@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker'
 import { randomDate, randomFullName, randomItemsInArray, randomPhoneNumber } from '../../utils/helpers/random.helper'
 import PatientEntity from '../entities/patient.entity'
-import { AddressData } from '../random/address.service'
+import { AddressData } from './common/address.service'
 
-export const patientFactory = async (clinicId: number) => {
+export const patientFactory = (clinicId: number) => {
 	const gender = randomItemsInArray(['Male', 'Female'])
 	const fullName = randomFullName(gender)
 
@@ -20,10 +20,12 @@ export const patientFactory = async (clinicId: number) => {
 	return patient
 }
 
-export const patientSeeder = async (clinicId: number, number: number) => {
-	const factoryList = []
+export const patientSeeder = (clinicId: number, number: number) => {
+	const factoryList: PatientEntity[] = []
 	for (let i = 0; i < number; i++) {
-		factoryList.push(patientFactory(clinicId))
+		const patient = patientFactory(clinicId)
+		factoryList.push(patient)
 	}
-	return await Promise.all(factoryList)
+
+	return factoryList
 }

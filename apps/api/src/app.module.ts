@@ -1,10 +1,12 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
+import { ClassSerializerInterceptor, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
 import { ConfigModule, ConfigType } from '@nestjs/config'
+import { APP_INTERCEPTOR } from '@nestjs/core'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { DataSource } from 'typeorm'
 import { MariadbConfig } from './environments'
-import { LoggerMiddleware } from './middlewares/logger.middleware'
-import { ValidateAccessTokenMiddleware } from './middlewares/validate-access-token.middleware'
+import { LoggerMiddleware } from './middleware/logger.middleware'
+import { ValidateAccessTokenMiddleware } from './middleware/validate-access-token.middleware'
+import { AdmissionModule } from './modules/admission/admission.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { ClinicModule } from './modules/clinic/clinic.module'
 import { EmployeeModule } from './modules/employee/employee.module'
@@ -27,10 +29,17 @@ import { PatientModule } from './modules/patient/patient.module'
 		}),
 		HealthModule,
 		AuthModule,
+		AdmissionModule,
 		EmployeeModule,
 		PatientModule,
 		ClinicModule,
 		MedicineModule,
+	],
+	providers: [
+		{
+			provide: APP_INTERCEPTOR,
+			useClass: ClassSerializerInterceptor,
+		},
 	],
 })
 export class AppModule implements NestModule {

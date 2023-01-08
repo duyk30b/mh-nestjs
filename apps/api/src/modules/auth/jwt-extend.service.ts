@@ -12,8 +12,9 @@ export class JwtExtendService {
 		private readonly jwtService: JwtService
 	) { }
 
-	createAccessToken(user: UserEntity): string {
+	createAccessToken(user: UserEntity, ip: string): string {
 		const userPayload: IJwtPayload = {
+			ip,
 			cPhone: user.clinic.phone,
 			cid: user.clinic.id,
 			uid: user.id,
@@ -26,22 +27,26 @@ export class JwtExtendService {
 		})
 	}
 
-	createRefreshToken(uid: number): string {
-		return this.jwtService.sign({ uid }, {
+	createRefreshToken(uid: number, ip: string): string {
+		return this.jwtService.sign({ uid, ip }, {
 			secret: this.jwtConfig.refreshKey,
 			expiresIn: this.jwtConfig.refreshTime,
 		})
 	}
 
-	createTokenFromUser(user: UserEntity) {
-		const accessToken = this.createAccessToken(user)
-		const refreshToken = this.createRefreshToken(user.id)
+	createTokenFromUser(user: UserEntity, ip: string) {
+		const accessToken = this.createAccessToken(user, ip)
+		const refreshToken = this.createRefreshToken(user.id, ip)
 		return { accessToken, refreshToken }
 	}
 
-	verifyAccessToken(accessToken: string): IJwtPayload {
+	verifyAccessToken(accessToken: string, ip: string): IJwtPayload {
 		try {
-			return this.jwtService.verify(accessToken, { secret: this.jwtConfig.accessKey })
+			const jwtPayload: IJwtPayload = this.jwtService.verify(accessToken, { secret: this.jwtConfig.accessKey })
+			if (jwtPayload.ip !== ip) {
+				throw new HttpException(ETokenError.Invalid, HttpStatus.UNAUTHORIZED)
+			}
+			return jwtPayload
 		} catch (error) {
 			if (error.name === 'TokenExpiredError') {
 				throw new HttpException(ETokenError.Expired, HttpStatus.UNAUTHORIZED)
@@ -52,9 +57,13 @@ export class JwtExtendService {
 		}
 	}
 
-	verifyRefreshToken(refreshToken: string): { uid: number } {
+	verifyRefreshToken(refreshToken: string, ip: string): { uid: number } {
 		try {
-			return this.jwtService.verify(refreshToken, { secret: this.jwtConfig.refreshKey })
+			const jwtPayload = this.jwtService.verify(refreshToken, { secret: this.jwtConfig.refreshKey })
+			if (jwtPayload.ip !== ip) {
+				throw new HttpException(ETokenError.Invalid, HttpStatus.UNAUTHORIZED)
+			}
+			return jwtPayload
 		} catch (error) {
 			if (error.name === 'TokenExpiredError') {
 				throw new HttpException(ETokenError.Expired, HttpStatus.FORBIDDEN)

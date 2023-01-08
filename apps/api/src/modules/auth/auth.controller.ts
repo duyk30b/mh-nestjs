@@ -1,12 +1,13 @@
-import { Body, Controller, Param, Post, Req } from '@nestjs/common'
+import { Body, Controller, Param, Post, Req, SerializeOptions } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { getClientIp } from 'request-ip'
-import { LoginDto, RefreshTokenDto, RegisterDto } from './auth.dto'
+import { LoginDto, RefreshTokenDto, RegisterDto, TokensResponse } from './auth.dto'
 import { AuthService } from './auth.service'
 import { JwtExtendService } from './jwt-extend.service'
 
 @ApiTags('Auth')
+@SerializeOptions({ excludeExtraneousValues: true, exposeUnsetFields: false })
 @Controller('auth')
 export class AuthController {
 	constructor(
@@ -15,18 +16,20 @@ export class AuthController {
 	) { }
 
 	@Post('register')
-	async register(@Body() registerDto: RegisterDto, @Req() request: Request) {
+	async register(@Body() registerDto: RegisterDto, @Req() request: Request): Promise<TokensResponse> {
 		const ip = getClientIp(request)
 		const employee = await this.authService.register(registerDto)
-		const { accessToken, refreshToken } = this.jwtExtendService.createTokenFromUser(employee)
-		return { accessToken, refreshToken }
+		const { accessToken, refreshToken } = this.jwtExtendService.createTokenFromUser(employee, ip)
+		return new TokensResponse({ accessToken, refreshToken })
 	}
 
 	@Post('login')
-	async login(@Body() loginDto: LoginDto) {
+	async login(@Body() loginDto: LoginDto, @Req() request: Request): Promise<TokensResponse> {
+		console.log('🚀 ~ file: auth.controller.ts:33 ~ AuthController ~ login ~ loginDto', loginDto)
+		const ip = getClientIp(request)
 		const employee = await this.authService.login(loginDto)
-		const { accessToken, refreshToken } = this.jwtExtendService.createTokenFromUser(employee)
-		return { accessToken, refreshToken }
+		const { accessToken, refreshToken } = this.jwtExtendService.createTokenFromUser(employee, ip)
+		return new TokensResponse({ accessToken, refreshToken })
 	}
 
 	@Post('logout')
@@ -45,8 +48,9 @@ export class AuthController {
 	}
 
 	@Post('refresh-token')
-	async grantAccessToken(@Body() refreshTokenDto: RefreshTokenDto) {
-		const accessToken = await this.authService.grantAccessToken(refreshTokenDto.refreshToken)
-		return { accessToken }
+	async grantAccessToken(@Body() refreshTokenDto: RefreshTokenDto, @Req() request: Request): Promise<TokensResponse> {
+		const ip = getClientIp(request)
+		const accessToken = await this.authService.grantAccessToken(refreshTokenDto.refreshToken, ip)
+		return new TokensResponse({ accessToken })
 	}
 }

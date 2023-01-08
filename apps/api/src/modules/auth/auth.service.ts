@@ -69,15 +69,15 @@ export class AuthService {
 		return employee
 	}
 
-	async grantAccessToken(refreshToken: string): Promise<string> {
-		const { uid } = this.jwtExtendService.verifyRefreshToken(refreshToken)
+	async grantAccessToken(refreshToken: string, ip: string): Promise<string> {
+		const { uid } = this.jwtExtendService.verifyRefreshToken(refreshToken, ip)
 
 		const employee = await this.dataSource.getRepository(EmployeeEntity).findOne({
 			relations: { clinic: true },
 			where: { id: uid },
 		})
 
-		const accessToken = this.jwtExtendService.createAccessToken(employee)
+		const accessToken = this.jwtExtendService.createAccessToken(employee, ip)
 		return accessToken
 	}
 }

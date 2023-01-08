@@ -1,13 +1,12 @@
-import * as bcrypt from 'bcrypt'
 import { randomDate, randomFullName, randomItemsInArray, randomPhoneNumber, randomUsername } from '../../utils/helpers/random.helper'
 import EmployeeEntity from '../entities/employee.entity'
 
-export const employeeFactory = async (clinicId: number) => {
+export const employeeFactory = (clinicId: number) => {
 	const gender = randomItemsInArray(['Male', 'Female'])
 	const fullName = randomFullName(gender)
 	const birthday = randomDate('1980-03-28', '2001-12-29')
 	const userName = randomUsername(fullName, birthday)
-	const hashPassword = await bcrypt.hash('Abc@123456', 5)
+	const hashPassword = '$2b$05$G17lx6yO8fK2iJK6tqX2XODsCrawFzSht5vJQjE7wlDJO0.4zxPxO'  // Abc@123456'
 
 	const employee = new EmployeeEntity()
 
@@ -23,10 +22,12 @@ export const employeeFactory = async (clinicId: number) => {
 	return employee
 }
 
-export const employeeSeeder = async (clinicId: number, number: number) => {
-	const factoryList = []
+export const employeeSeeder = (clinicId: number, number: number) => {
+	const factoryList: EmployeeEntity[] = []
 	for (let i = 0; i < number; i++) {
-		factoryList.push(employeeFactory(clinicId))
+		const employee = employeeFactory(clinicId)
+		factoryList.push(employee)
 	}
-	return await Promise.all(factoryList)
+
+	return factoryList
 }

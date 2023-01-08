@@ -15,7 +15,7 @@ import { TimeoutInterceptor } from './interceptor/timeout.interceptor'
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule)
-	
+
 	const configService = app.get(ConfigService)
 	const PORT = configService.get('NESTJS_PORT')
 	const HOST = configService.get('NESTJS_HOST') || 'localhost'
@@ -43,7 +43,14 @@ async function bootstrap() {
 
 	app.useGlobalPipes(new ValidationPipe({
 		validationError: { target: false, value: true },
-		skipMissingProperties: true,
+		skipMissingProperties: true, // không validate những property undefined
+		whitelist: true, // loại bỏ các property không có trong DTO
+		forbidNonWhitelisted: true, // xuất hiện property không có trong DTO sẽ bắt lỗi
+		transform: true, // sử dụng transform cho các DTO
+		transformOptions: {
+			// excludeExtraneousValues: true, // loại bỏ các property không có trong DTO => ko cần, cứ để đấy để validate bắt lỗi
+			exposeUnsetFields: false, // loại bỏ các property có trong DTO, nhưng không truyền lên
+		},
 		exceptionFactory: (errors: ValidationError[] = []) => new ValidationException(errors),
 	}))
 

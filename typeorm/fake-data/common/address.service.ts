@@ -1,6 +1,6 @@
 import * as fs from 'fs'
-import { randomFullName, randomItemsInArray, randomNumber } from '../../utils/helpers/random.helper'
-import { HttpsGet } from '../../utils/helpers/request.helper'
+import { randomFullName, randomItemsInArray, randomNumber } from '../../../utils/helpers/random.helper'
+import { HttpsGet } from '../../../utils/helpers/request.helper'
 
 type Ward = {
 	name: string

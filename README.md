@@ -62,7 +62,7 @@ git reset --hard origin/master
 3. NestJS
 - Create new app: `nest generate app my-app`
 - Create new library: `nest g library my-library`
-- Create new module: `nest g resource my-module`
+- Create new module: `nest g resource modules/my-module`
 
 4. Linux
 - List env: `printenv`

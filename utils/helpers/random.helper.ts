@@ -46,9 +46,3 @@ export const randomUsername = (fullName?: string, birthday?: Date): string => {
 	const number = birthday.getFullYear().toString().slice(-2)
 	return text + number
 }
-
-export const randomBloodPressure = () => {
-	const diastolic = randomNumber(60, 120)
-	const systolic = diastolic + randomNumber(25, 70)
-	return `${systolic}/${diastolic}`
-}
