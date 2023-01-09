@@ -18,7 +18,7 @@ export default class EmployeeEntity extends BaseEntity {
 	@Exclude()
 	clinicId: number
 
-	@ManyToOne(type => ClinicEntity)
+	@ManyToOne(type => ClinicEntity, { createForeignKeyConstraints: false })
 	@JoinColumn({ name: 'clinic_id', referencedColumnName: 'id' })
 	clinic: ClinicEntity
 

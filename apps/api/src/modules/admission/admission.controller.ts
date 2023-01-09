@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req, SerializeOptions } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post, SerializeOptions } from '@nestjs/common'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
-import { RequestToken } from '../../common/constants'
+import { CidRequest } from '../../decorators/request.decorator'
 import { CreateAdmissionDto, UpdateAdmissionDto } from './admission.dto'
 import { AdmissionService } from './admission.service'
 
@@ -22,9 +22,8 @@ export class AdmissionController {
 	}
 
 	@Post()
-	create(@Body() createAdmissionDto: CreateAdmissionDto, @Req() request: RequestToken) {
-		const clinicId = request.tokenPayload.cid
-		return this.admissionService.create(clinicId, createAdmissionDto)
+	async create(@Body() createAdmissionDto: CreateAdmissionDto, @CidRequest() cid: number) {
+		return await this.admissionService.create(cid, createAdmissionDto)
 	}
 
 	@Patch(':id')

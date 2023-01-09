@@ -1,6 +1,6 @@
 import { Body, Controller, Param, Post, SerializeOptions } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { IpRequest } from '../../decorators/ip-request.decorator'
+import { IpRequest } from '../../decorators/request.decorator'
 import { LoginDto, RefreshTokenDto, RegisterDto, TokensResponse } from './auth.dto'
 import { AuthService } from './auth.service'
 import { JwtExtendService } from './jwt-extend.service'

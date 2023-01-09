@@ -4,12 +4,12 @@ import { IsDate, IsEnum, IsNumber, IsString, ValidateNested } from 'class-valida
 import { EGender } from '../../../../../typeorm/base.entity'
 import PatientEntity from '../../../../../typeorm/entities/patient.entity'
 
-class PatientDto {
-	@ApiPropertyOptional({ name: 'patient_id', example: '' })
-	@Expose({ name: 'patient_id' })
+export class PatientDto {
+	@ApiPropertyOptional({ example: '' })
+	@Expose()
 	@Type(() => Number)
 	@IsNumber()
-	patientId: number
+	id: number
 
 	@ApiPropertyOptional({ name: 'full_name', example: 'Nguyễn Thị Ánh' })
 	@Expose({ name: 'full_name' })
@@ -43,7 +43,7 @@ export class CreateAdmissionDto {
 	@Expose()
 	@ValidateNested({ each: true })
 	@Type(() => PatientDto)
-	patient: PatientEntity
+	patient: PatientDto
 
 	@ApiPropertyOptional({ example: 'Sốt cao ngày thứ 3' })
 	@Expose()
