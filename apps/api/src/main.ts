@@ -9,7 +9,7 @@ import { setupSwagger } from './common/swagger'
 import { HttpExceptionFilter } from './exception-filters/http-exception.filter'
 import { UnknownExceptionFilter } from './exception-filters/unknown-exception.filter'
 import { ValidationException, ValidationExceptionFilter } from './exception-filters/validation-exception.filter'
-import { UserRolesGuard } from './guards/user-roles.guard'
+import { RolesGuard } from './guards/roles.guard'
 import { AccessLogInterceptor } from './interceptor/access-log.interceptor'
 import { TimeoutInterceptor } from './interceptor/timeout.interceptor'
 
@@ -38,18 +38,18 @@ async function bootstrap() {
 		new HttpExceptionFilter(),
 		new ValidationExceptionFilter()
 	)
-
-	app.useGlobalGuards(new UserRolesGuard(app.get(Reflector)))
+	
+	app.useGlobalGuards(new RolesGuard(app.get(Reflector)))
 
 	app.useGlobalPipes(new ValidationPipe({
 		validationError: { target: false, value: true },
 		skipMissingProperties: true, // không validate những property undefined
 		whitelist: true, // loại bỏ các property không có trong DTO
 		forbidNonWhitelisted: true, // xuất hiện property không có trong DTO sẽ bắt lỗi
-		transform: true, // sử dụng transform cho các DTO
+		transform: true, // use for DTO
 		transformOptions: {
-			// excludeExtraneousValues: true, // loại bỏ các property không có trong DTO => ko cần, cứ để đấy để validate bắt lỗi
-			exposeUnsetFields: false, // loại bỏ các property có trong DTO, nhưng không truyền lên
+			excludeExtraneousValues: false, // exclude field not in class DTO => no
+			exposeUnsetFields: false, // expose field undefined in DTO => no
 		},
 		exceptionFactory: (errors: ValidationError[] = []) => new ValidationException(errors),
 	}))

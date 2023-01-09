@@ -1,10 +1,11 @@
 import { faker } from '@faker-js/faker'
 import { randomDate, randomFullName, randomItemsInArray, randomPhoneNumber } from '../../utils/helpers/random.helper'
+import { EGender } from '../base.entity'
 import PatientEntity from '../entities/patient.entity'
 import { AddressData } from './common/address.service'
 
 export const patientFactory = (clinicId: number) => {
-	const gender = randomItemsInArray(['Male', 'Female'])
+	const gender = randomItemsInArray(Object.values(EGender))
 	const fullName = randomFullName(gender)
 
 	const patient = new PatientEntity()

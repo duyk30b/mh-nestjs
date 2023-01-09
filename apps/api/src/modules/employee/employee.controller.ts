@@ -1,14 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common'
-import { UseInterceptors } from '@nestjs/common/decorators'
-import { ClassSerializerInterceptor } from '@nestjs/common/serializer'
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger'
+import { ERole } from '../../../../../typeorm/entities/employee.entity'
 import { RequestToken } from '../../common/constants'
+import { Roles } from '../../guards/roles.guard'
 import { CreateEmployeeDto, UpdateEmployeeDto } from './employee.dto'
 import { EmployeeService } from './employee.service'
 
 @ApiTags('Employee')
 @ApiBearerAuth('access-token')
-@UseInterceptors(ClassSerializerInterceptor)
+@Roles(ERole.Admin, ERole.Owner)
 @Controller('employee')
 export class EmployeeController {
 	constructor(private readonly employeeService: EmployeeService) { }

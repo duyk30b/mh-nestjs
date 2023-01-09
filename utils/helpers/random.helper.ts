@@ -1,3 +1,4 @@
+import { EGender, TGender } from '../../typeorm/base.entity'
 import { convertViToEn } from './string.helper'
 
 export const randomItemsInArray = (items: any[]) => items[Math.floor(Math.random() * items.length)]
@@ -13,7 +14,7 @@ export const randomPhoneNumber = (): string => {
 	return headNumber + tailNumber
 }
 
-export const randomFullName = (gender?: 'Male' | 'Female', hasMiddle = true): string => {
+export const randomFullName = (gender?: TGender, hasMiddle = true): string => {
 	const surname = randomItemsInArray(['Nguyễn', 'Lê', 'Phạm', 'Vũ', 'Phan', 'Trương', 'Trần', 'Bùi', 'Đặng', 'Đỗ', 'Ngô', 'Dương'])
 	let middleName = '',
 		lastName = ''
@@ -39,7 +40,7 @@ export const randomDate = (minDate?: Date | string | number, maxDate?: Date | st
 }
 
 export const randomUsername = (fullName?: string, birthday?: Date): string => {
-	if (!fullName) fullName = randomFullName('Male')
+	if (!fullName) fullName = randomFullName(randomItemsInArray(Object.values(EGender)))
 	if (!birthday) birthday = randomDate('1960-01-29', '2000-12-25')
 	const nameEng = convertViToEn(fullName).toLowerCase()
 	const text = nameEng.split(' ').slice(-2).join('')

@@ -16,6 +16,6 @@ export const MariadbConfig = registerAs('mariadb', (): TypeOrmModuleOptions => (
 	username: process.env.MARIADB_USERNAME,
 	password: process.env.MARIADB_PASSWORD,
 	autoLoadEntities: true,
-	logging: process.env.NODE_ENV !== 'production',
+	// logging: process.env.NODE_ENV !== 'production',
 	synchronize: process.env.NODE_ENV === 'local',
 }))

@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import * as bcrypt from 'bcrypt'
 import { plainToClass } from 'class-transformer'
 import { Repository } from 'typeorm'
-import EmployeeEntity, { EEmployeeRole } from '../../../../../typeorm/entities/employee.entity'
+import EmployeeEntity, { ERole } from '../../../../../typeorm/entities/employee.entity'
 import { EEmployeeError, ERegisterError } from '../../exception-filters/exception.enum'
 import { CreateEmployeeDto, UpdateEmployeeDto } from './employee.dto'
 
@@ -27,7 +27,7 @@ export class EmployeeService {
 		}
 		const snapEmployee = plainToClass(EmployeeEntity, createEmployeeDto)
 		snapEmployee.password = await bcrypt.hash(createEmployeeDto.password, 5)
-		snapEmployee.role = EEmployeeRole.User
+		snapEmployee.role = ERole.User
 		return await this.employeeRepository.save(createEmployeeDto)
 	}
 

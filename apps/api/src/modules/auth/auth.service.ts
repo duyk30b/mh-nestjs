@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { DataSource } from 'typeorm'
 import ClinicEntity from '../../../../../typeorm/entities/clinic.entity'
-import EmployeeEntity, { EEmployeeRole } from '../../../../../typeorm/entities/employee.entity'
+import EmployeeEntity, { ERole } from '../../../../../typeorm/entities/employee.entity'
 import { ELoginError, ERegisterError } from '../../exception-filters/exception.enum'
 import { LoginDto, RegisterDto } from './auth.dto'
 import { JwtExtendService } from './jwt-extend.service'
@@ -43,7 +43,7 @@ export class AuthService {
 				clinic: newClinic,
 				username,
 				password: hashPassword,
-				role: EEmployeeRole.Owner,
+				role: ERole.Owner,
 			})
 			const newEmployee = await manager.save(snapEmployee)
 

@@ -1,7 +1,6 @@
-import { Body, Controller, Param, Post, Req, SerializeOptions } from '@nestjs/common'
+import { Body, Controller, Param, Post, SerializeOptions } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { Request } from 'express'
-import { getClientIp } from 'request-ip'
+import { IpRequest } from '../../decorators/ip-request.decorator'
 import { LoginDto, RefreshTokenDto, RegisterDto, TokensResponse } from './auth.dto'
 import { AuthService } from './auth.service'
 import { JwtExtendService } from './jwt-extend.service'
@@ -16,17 +15,14 @@ export class AuthController {
 	) { }
 
 	@Post('register')
-	async register(@Body() registerDto: RegisterDto, @Req() request: Request): Promise<TokensResponse> {
-		const ip = getClientIp(request)
+	async register(@Body() registerDto: RegisterDto, @IpRequest() ip: string): Promise<TokensResponse> {
 		const employee = await this.authService.register(registerDto)
 		const { accessToken, refreshToken } = this.jwtExtendService.createTokenFromUser(employee, ip)
 		return new TokensResponse({ accessToken, refreshToken })
 	}
 
 	@Post('login')
-	async login(@Body() loginDto: LoginDto, @Req() request: Request): Promise<TokensResponse> {
-		console.log('🚀 ~ file: auth.controller.ts:33 ~ AuthController ~ login ~ loginDto', loginDto)
-		const ip = getClientIp(request)
+	async login(@Body() loginDto: LoginDto, @IpRequest() ip: string): Promise<TokensResponse> {
 		const employee = await this.authService.login(loginDto)
 		const { accessToken, refreshToken } = this.jwtExtendService.createTokenFromUser(employee, ip)
 		return new TokensResponse({ accessToken, refreshToken })
@@ -48,8 +44,7 @@ export class AuthController {
 	}
 
 	@Post('refresh-token')
-	async grantAccessToken(@Body() refreshTokenDto: RefreshTokenDto, @Req() request: Request): Promise<TokensResponse> {
-		const ip = getClientIp(request)
+	async grantAccessToken(@Body() refreshTokenDto: RefreshTokenDto, @IpRequest() ip: string): Promise<TokensResponse> {
 		const accessToken = await this.authService.grantAccessToken(refreshTokenDto.refreshToken, ip)
 		return new TokensResponse({ accessToken })
 	}

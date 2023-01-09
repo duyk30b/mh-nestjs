@@ -6,6 +6,8 @@ export enum EGender {
 	Female = 'Female',
 }
 
+export type TGender = keyof typeof EGender
+
 export class BaseEntity {
 	@PrimaryGeneratedColumn({ name: 'id' })
 	id: number

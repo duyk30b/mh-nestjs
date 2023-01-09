@@ -3,13 +3,13 @@ import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm'
 import { BaseEntity, EGender } from '../base.entity'
 import ClinicEntity from './clinic.entity'
 
-export enum EEmployeeRole {
+export enum ERole {
 	Owner = 'Owner',
 	Admin = 'Admin',
 	User = 'User',
 }
 
-export type TEmployeeRole = keyof typeof EEmployeeRole
+export type TRole = keyof typeof ERole
 
 @Entity('employee')
 @Index(['clinicId', 'username'], { unique: true })
@@ -32,8 +32,8 @@ export default class EmployeeEntity extends BaseEntity {
 	@Exclude()
 	password: string
 
-	@Column({ type: 'enum', enum: EEmployeeRole, default: EEmployeeRole.User })
-	role: EEmployeeRole
+	@Column({ type: 'enum', enum: ERole, default: ERole.User })
+	role: ERole
 
 	@Column({ name: 'full_name', nullable: true })
 	fullName: string
